@@ -31,10 +31,48 @@ app.get("/connect", async(req, res) => {
 
 app.get("/courses", async(req, res) => {
     try {
-        let courses = await Course.createCourseIndex();
+        let courses = await Course.getCourseList();
         res.send(courses);
     } catch(error) {
         res.status(500).send("Error in courses");
+    }
+});
+
+app.get("/courses/technologies", async(req, res) => {
+    try {
+        let courses = await Course.getCourseList();
+        let set = new Set();
+
+        for(let i =0; i < (await courses).length;i++) {
+            let technologies = courses[i].getTechnologies();
+            for(let j = 0; j < technologies.length;j++) {
+                set.add(courses[i].technologies[j]);
+            }
+        }
+
+        let result = [...set];
+        res.json(result);
+    } catch(error) {
+        console.log(`Error in /courses/technologies, ${error}`);
+    }
+});
+
+app.get("/courses/languages", async(req, res) => {
+    try {
+        let courses = await Course.getCourseList();
+        let set = new Set();
+
+        for(let i =0; i < (await courses).length;i++) {
+            let languages = courses[i].getLanguages();
+            for(let j = 0; j < languages.length;j++) {
+                set.add(courses[i].languages[j]);
+            }
+        }
+
+        let result = [...set];
+        res.json(result);
+    } catch(error) {
+        console.log(`Error in /courses/technologies, ${error}`);
     }
 });
 

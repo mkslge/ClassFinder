@@ -37,3 +37,5 @@ export async function closeDatabaseConnection() {
     console.log("Database connection closed");
   }
 }
+
+

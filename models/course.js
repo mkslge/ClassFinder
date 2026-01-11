@@ -24,9 +24,18 @@ class Course {
         this.average_gpa = average_gpa;
     }
 
+    getLanguages() {
+        return this.languages;
+    }
+
+    getTechnologies() {
+        return this.technologies;
+    }
 
 
-    static async createCourseIndex() {
+
+
+    static async getCourseList() {
         
         try {
             const db = await connectToDatabase();
@@ -34,7 +43,7 @@ class Course {
 
             const courses = await courseCollection.find({}).toArray();
             let formatted_courses = this.formatJsonCourses(courses);
-            //console.log(formatted_courses);
+            console.log(formatted_courses);
             return formatted_courses;
         } catch(error) {
             console.error("Failed to fetch course index.");
