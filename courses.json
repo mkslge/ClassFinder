@@ -1,0 +1,123 @@
+[
+  {
+    "_id": "6963c9a14f951a4706edb484",
+    "code": "CMSC411",
+    "title": "Computer Architecture",
+    "average_gpa": 2.89,
+    "is_required": false,
+    "languages": [
+      "C",
+      "Assembly"
+    ],
+    "technologies": []
+  },
+  {
+    "_id": "6963d9cf3e8f47cb055850f2",
+    "code": "CMSC330",
+    "title": "Organization of Programming Languages",
+    "average_gpa": 2.78,
+    "is_required": true,
+    "languages": [
+      "OCaml",
+      "Rust"
+    ],
+    "technologies": [
+      "Git"
+    ]
+  },
+  {
+    "_id": "6963da5c3e8f47cb055850f3",
+    "code": "CMSC420",
+    "title": "Advanced Data Structures",
+    "average_gpa": 2.99,
+    "is_required": false,
+    "languages": [
+      "Python"
+    ],
+    "technologies": []
+  },
+  {
+    "_id": "6963dac33e8f47cb055850f4",
+    "code": "CMSC131",
+    "title": "Object-Oriented Programming I",
+    "average_gpa": 2.47,
+    "is_required": true,
+    "languages": [
+      "Java"
+    ],
+    "technologies": []
+  },
+  {
+    "_id": "6963db8b3e8f47cb055850f5",
+    "code": "CMSC132",
+    "title": "Object-Oriented Programming II",
+    "average_gpa": 2.61,
+    "is_required": true,
+    "languages": [
+      "Java"
+    ],
+    "technologies": []
+  },
+  {
+    "_id": "6963dbcf3e8f47cb055850f6",
+    "code": "CMSC250",
+    "title": "Discrete Structures",
+    "average_gpa": 2.67,
+    "is_required": true,
+    "languages": [
+      "No Code"
+    ],
+    "technologies": []
+  },
+  {
+    "_id": "6963dc003e8f47cb055850f8",
+    "code": "CMSC216",
+    "title": "Computer Systems",
+    "average_gpa": 2.53,
+    "is_required": true,
+    "languages": [
+      "C",
+      "Assembly"
+    ],
+    "technologies": []
+  },
+  {
+    "_id": "6963dc3d3e8f47cb055850f9",
+    "code": "CMSC351",
+    "title": "Algorithms",
+    "average_gpa": 2.47,
+    "is_required": true,
+    "languages": [
+      "No Code"
+    ],
+    "technologies": []
+  },
+  {
+    "_id": "6963dc843e8f47cb055850fa",
+    "code": "CMSC335",
+    "title": "Web Development",
+    "average_gpa": 3.68,
+    "is_required": false,
+    "languages": [
+      "JavaScript",
+      "HTML",
+      "CSS"
+    ],
+    "technologies": [
+      "MongoDB"
+    ]
+  },
+  {
+    "_id": "6963dce83e8f47cb055850fb",
+    "code": "CMSC433",
+    "title": "Programming Language Technologies and Paradigms",
+    "average_gpa": 2.88,
+    "is_required": false,
+    "languages": [
+      "Dafny",
+      "Rocq",
+      "Python"
+    ],
+    "technologies": []
+  }
+]

@@ -1,7 +1,7 @@
 import express from "express";
 import "dotenv/config"; 
 import { connectToDatabase, getCollection, closeDatabaseConnection } from "./database.js";
-
+import Course from "./models/course.js";
 
 const portNumber = 3030;
 const app = express();
@@ -31,14 +31,14 @@ app.get("/connect", async(req, res) => {
 
 app.get("/courses", async(req, res) => {
     try {
-        const db = await connectToDatabase();
-        let count = await db.collection("courses").estimatedDocumentCount();
-        console.log(count);
-        res.send(count);
+        let courses = await Course.createCourseIndex();
+        res.send(courses);
     } catch(error) {
-        res.status(500).send("Error, /courses");
+        res.status(500).send("Error in courses");
     }
 });
+
+
 
 
 
