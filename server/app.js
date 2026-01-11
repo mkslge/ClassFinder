@@ -1,7 +1,7 @@
 import express from "express";
 import "dotenv/config"; 
 import { connectToDatabase, getCollection, closeDatabaseConnection } from "./database.js";
-import Course from "./models/course.js";
+import Course from "../models/course.js";
 
 const portNumber = 3030;
 const app = express();

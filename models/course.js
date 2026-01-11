@@ -1,5 +1,5 @@
 
-import { connectToDatabase, getCollection, closeDatabaseConnection } from "../database.js";
+import { connectToDatabase, getCollection, closeDatabaseConnection } from "../server/database.js";
 import fs from "fs/promises";
 class Course {
     code;
@@ -24,6 +24,8 @@ class Course {
         this.average_gpa = average_gpa;
     }
 
+
+
     static async createCourseIndex() {
         
         try {
@@ -31,13 +33,8 @@ class Course {
             const courseCollection = db.collection("courses");
 
             const courses = await courseCollection.find({}).toArray();
-
-            await  fs.writeFile("courses.json", 
-                JSON.stringify(courses, null, 2),
-                "utf8"
-            );
-            let formatted_courses = JSON.stringify(courses, null, 2);
-            console.log(formatted_courses);
+            let formatted_courses = this.formatJsonCourses(courses);
+            //console.log(formatted_courses);
             return formatted_courses;
         } catch(error) {
             console.error("Failed to fetch course index.");
@@ -45,8 +42,24 @@ class Course {
         }
     }
 
+    static formatJsonCourses(courses) {
+        let lst = [];
+        for(let i = 0; i < courses.length;i++) {
+            lst.push(this.jsonToCourse(courses[i]));
+        }
+        return lst;
+    }
 
 
+    static jsonToCourse(json) {
+        try {
+            return new Course(json.code, json.title, json.is_required, json.area, json.languages, json.technologies, json.average_gpa);
+        } catch(error ) {
+            console.error(`Json of Course Object ${json.code} does not have needed fields... ${error}`);
+            return "Error in jsonToCourse"
+        }
+        
+    }
 }
 
 export default Course
