@@ -1,0 +1,40 @@
+.menu {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu ul {
+  padding: 0 10px;
+  margin: 0;
+}
+
+.menu li {
+  list-style: none;
+  text-align: right;
+  display: inline-block;
+  padding-right: 8px;
+}
+
+.menu li {
+  border-bottom: 1px solid white;
+}
+
+.menu a {
+  display: block;
+  font-size: 22pt;
+  font-weight: 300;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+}
+
+.menu a:hover {
+  border-bottom: 1px solid hsl(0, 72%, 42%);
+}
+
+.menu .active {
+  font-weight: 500;
+}
