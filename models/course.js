@@ -5,23 +5,23 @@ class Course {
     code;
     title;
 
-    is_required;
+    isRequired;
 
     area;
 
     languages;
     technologies;
 
-    average_gpa;
+    averageGPA;
 
-    constructor(code, title, is_required, area, languages, technolgies, average_gpa) {
+    constructor(code, title, isRequired, area, languages, technolgies, averageGPA) {
         this.code = code;
         this.title = title;
-        this.is_required = is_required;
+        this.isRequired = isRequired;
         this.area = area;
         this.languages = languages;
         this.technologies = technolgies;
-        this.average_gpa = average_gpa;
+        this.averageGPA = averageGPA;
     }
 
     getLanguages() {
@@ -42,9 +42,8 @@ class Course {
             const courseCollection = db.collection("courses");
 
             const courses = await courseCollection.find({}).toArray();
-            let formatted_courses = this.formatJsonCourses(courses);
-            console.log(formatted_courses);
-            return formatted_courses;
+            
+            return courses;
         } catch(error) {
             console.error("Failed to fetch course index.");
             return "Error";
@@ -62,7 +61,7 @@ class Course {
 
     static jsonToCourse(json) {
         try {
-            return new Course(json.code, json.title, json.is_required, json.area, json.languages, json.technologies, json.average_gpa);
+            return new Course(json.code, json.title, json.isRequired, json.area, json.languages, json.technologies, json.averageGPA);
         } catch(error ) {
             console.error(`Json of Course Object ${json.code} does not have needed fields... ${error}`);
             return "Error in jsonToCourse"
