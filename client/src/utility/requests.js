@@ -7,7 +7,6 @@ export async function getRequest(url) {
         if(!response.ok) {
             throw new Error(`HTTP error, get request failed, ${response.status}`);
         } else {
-            //console.log(response.json());
             return response.json();
         }
     } catch(error) {
