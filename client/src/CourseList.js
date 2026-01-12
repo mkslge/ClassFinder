@@ -13,6 +13,9 @@ function CourseList() {
   const [activeFilters, setActiveFilters] = useState([])
   const [loadingFilters, setLoadingFilter] = useState(true)
 
+  const [techLangs, setTechLangs] = useState([]);
+  const [areas, setAreas] = useState([])
+
   useEffect(() => {
     (async () => {
       try {
@@ -31,16 +34,19 @@ function CourseList() {
   useEffect(() => {
     (async () => {
       try {
-        const techs = await requestUtil.getRequest("http://localhost:3030/courses/technologies")
-        let filterObjs = techs.map(tech =>
-          new Filter(tech, (course) => course.getTechnologies().includes(tech))
-        )
+        const techJson = await requestUtil.getRequest("http://localhost:3030/courses/technologies")
+        const techObjs = techJson.map(tech => new Filter(tech, (course) => course.getTechnologies().includes(tech)))
 
-        const langs = await requestUtil.getRequest("http://localhost:3030/courses/languages")
-        filterObjs = [...filterObjs, ...langs.map(lang => 
-            new Filter(lang, (course) => course.getLanguages().includes(lang)))
-        ]
-        setFilters(filterObjs)
+        const langJson = await requestUtil.getRequest("http://localhost:3030/courses/languages")
+        const langObjs = langJson.map(lang => new Filter(lang, (course) => course.getLanguages().includes(lang)))
+        
+
+        const areaJson = await requestUtil.getRequest("http://localhost:3030/courses/areas")
+        const areaObjs = areaJson.map(area => new Filter(area, (course) => course.getArea() === area))
+
+        setFilters([...techObjs, ...langObjs, ...areaObjs]);
+        setTechLangs([...techObjs, ...langObjs])
+        setAreas(areaObjs);
       } finally {
         setLoadingFilter(false)
       }
@@ -55,9 +61,22 @@ function CourseList() {
   return (
     <div className="CourseList">
       <ul>
-        {loadingFilters ? `Loading Filters...` : `Loaded ${filters.length} technologies...`}
+        {loadingFilters ? `Loading Filters...` : `Loaded ${techLangs.length} languages & technologies...`}
+        {`Filter by languages and technologies`}
+        {techLangs.map(f => (
+          <li key={f.getName()}>
+            <button onClick={() => setActiveFilters(prev => filterUtil.toggleFilter(prev, f))}>
+              {f.getName()}
+            </button>
+          </li>
+        ))}
+      </ul>
 
-        {filters.map(f => (
+
+      <ul>
+        {loadingFilters ? `Loading Filters...` : `Loaded ${areas.length} areas...`}
+        {`Filter by area`}
+        {areas.map(f => (
           <li key={f.getName()}>
             <button onClick={() => setActiveFilters(prev => filterUtil.toggleFilter(prev, f))}>
               {f.getName()}
