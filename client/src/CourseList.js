@@ -36,6 +36,15 @@ function CourseList() {
                     {loading ? ` Loading...` : `Loaded ${courses.length} courses...`}; 
                 </a>
             </li>
+            
+            {courses.map(course => (
+                <li key={course.code}>
+                    {course.code} {course.title},
+                    <br></br>
+                </li>
+                
+            ))}
+
         </ul>
       </nav>
     </div>
