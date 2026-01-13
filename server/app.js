@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config"; 
 import { connectToDatabase, getCollection, closeDatabaseConnection } from "./database.js";
 import Course from "../models/course.js";
+import Keyword from "../models/keyword.js";
 
 const portNumber = 3030;
 const app = express();
@@ -19,7 +20,6 @@ app.use(cors({
 
 
 app.get("/", async(req, res) => {
-    console.log("Hello World!");
     res.send("Hello World");
 });
 
@@ -45,8 +45,8 @@ app.get("/changekey", async(req, res) => {
         const collection = await getCollection("courses");
 
         await collection.updateMany(
-            { average_gpa: { $exists: true } },
-            { $rename: { average_gpa: "averageGPA" } }
+            { area: { $exists: true } },
+            { $rename: { area: "keywords" } }
             );
 
         res.send(`Changed key in db ${db.databaseName}`);
@@ -55,6 +55,8 @@ app.get("/changekey", async(req, res) => {
         res.status(500).send(`Error, DB Couldn't Connect. ${error}`);
     }
 });
+
+
 
 app.get("/courses", async(req, res) => {
     try {
@@ -102,9 +104,20 @@ app.get("/courses/languages", async(req, res) => {
         let result = [...set];
         res.json(result);
     } catch(error) {
-        console.log(`Error in /courses/technologies, ${error}`);
+        console.log(`Error in /courses/languages, ${error}`);
     }
 });
+
+app.get("/courses/keywords", async(req, res) => {
+    try {
+        let keywords = await Keyword.getKeywordList();
+
+        res.send(keywords);
+    } catch(error) {
+        console.log(`Error in /courses/areas, ${error}`);
+    }
+});
+
 
 
 
