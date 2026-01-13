@@ -4,20 +4,19 @@ class Course {
 
     is_required;
 
-    area;
-
+    keywords;
     languages;
     technologies;
 
     averageGPA;
 
-    constructor(code, title, isRequired, area, languages, technolgies, averageGPA) {
+    constructor(code, title, isRequired, keywords, languages, technolgies, averageGPA) {
         this.code = code;
         this.title = title;
         this.isRequired = isRequired;
-        this.area = area;
-        this.languages = languages;
-        this.technologies = technolgies;
+        this.keywords = keywords ?? [];
+        this.languages = languages ?? [];
+        this.technologies = technolgies ?? [];
         this.averageGPA = averageGPA;
     }
 
@@ -33,8 +32,8 @@ class Course {
         return this.isRequired;
     }
 
-    getArea() {
-        return this.area;
+    getKeywords() {
+        return this.keywords;
     }
 
     getLanguages() {

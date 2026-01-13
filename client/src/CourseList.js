@@ -14,7 +14,7 @@ function CourseList() {
   const [loadingFilters, setLoadingFilter] = useState(true)
 
   const [techLangs, setTechLangs] = useState([]);
-  const [areas, setAreas] = useState([])
+  const [keywords, setKeywords] = useState([])
 
   useEffect(() => {
     (async () => {
@@ -22,9 +22,17 @@ function CourseList() {
         const data = await requestUtil.getRequest("http://localhost:3030/courses")
         const courseObjs = data.map(c =>
           new Course(c.code, c.title, c.isRequired ?? c.is_required,
-            c.area, c.languages, c.technologies, c.averageGPA)
+            c.keywords ?? [], c.languages ?? [], c.technologies ?? [], c.averageGPA)
         )
         setCourses(courseObjs)
+
+
+        data.forEach(c => {
+  if (!Array.isArray(c.technologies)) console.log("Bad technologies:", c)
+  if (!Array.isArray(c.languages)) console.log("Bad languages:", c)
+  if (c.keywords != null && !Array.isArray(c.keywords)) console.log("Bad keywords:", c)
+})
+
       } finally {
         setLoading(false)
       }
@@ -41,12 +49,14 @@ function CourseList() {
         const langObjs = langJson.map(lang => new Filter(lang, (course) => course.getLanguages().includes(lang)))
         
 
-        const areaJson = await requestUtil.getRequest("http://localhost:3030/courses/areas")
-        const areaObjs = areaJson.map(area => new Filter(area, (course) => course.getArea() === area))
+        const keywordJson = await requestUtil.getRequest("http://localhost:3030/courses/keywords")
+        
+        
+        const keywordObjs = keywordJson.map(kw => new Filter(kw, (course) => course.getKeywords().includes(kw)))
 
-        setFilters([...techObjs, ...langObjs, ...areaObjs]);
+        setFilters([...techObjs, ...langObjs, ...keywordObjs]);
         setTechLangs([...techObjs, ...langObjs])
-        setAreas(areaObjs);
+        setKeywords(keywordObjs);
       } finally {
         setLoadingFilter(false)
       }
@@ -74,9 +84,9 @@ function CourseList() {
 
 
       <ul>
-        {loadingFilters ? `Loading Filters...` : `Loaded ${areas.length} areas...`}
-        {`Filter by area`}
-        {areas.map(f => (
+        {loadingFilters ? `Loading Filters...` : `Loaded ${keywords.length} keywords...`}
+        {`Filter by keyword`}
+        {keywords.map(f => (
           <li key={f.getName()}>
             <button onClick={() => setActiveFilters(prev => filterUtil.toggleFilter(prev, f))}>
               {f.getName()}
