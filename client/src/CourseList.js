@@ -6,9 +6,11 @@ import * as filterUtil from './utility/filters.js'
 import * as Util from './utility/utility.js'
 
 import Filter from './models/filter.js'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useRef } from 'react'
 
 function CourseList() {
+  const ran = useRef(false);
+  
   const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -19,11 +21,20 @@ function CourseList() {
   const [techLangs, setTechLangs] = useState([])
   const [keywords, setKeywords] = useState([])
 
+  
+  
   useEffect(() => {
+    if(ran.current ) {
+        return;
+    } else {
+        ran.current = true;
+    }
     (async () => {
       try {
-        const data = await requestUtil.getRequest("http://localhost:3030/courses")
-        const courseObjs = data.map(c =>
+        let addVisitor = (async() => await requestUtil.postRequest("http://localhost:3030/addvisitor"));
+        addVisitor();
+        const courseJson = await requestUtil.getRequest("http://localhost:3030/courses")
+        const courseObjs = courseJson.map(c =>
           new Course(
             c.code,
             c.title,

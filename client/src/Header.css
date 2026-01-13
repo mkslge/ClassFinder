@@ -18,8 +18,8 @@
   --muted: rgba(255, 255, 255, 0.82);
 
   /* Accents */
-  --accent: var(--umd-gold);
-  --accentSoft: rgba(234, 170, 0, 0.18);
+  --accent: var(--umd-red);
+  --accentSoft: rgba(234, 0, 0, 0.18);
 }
 
 /* ---- Wrapper ---- */
@@ -111,10 +111,10 @@
   transition: background 140ms ease, color 140ms ease, transform 140ms ease;
 }
 
-/* crisp gold wash on hover */
+
 .menuLink:hover {
   color: var(--text);
-  background: rgba(234, 170, 0, 0.16);
+  background: rgba(234, 0, 0, 0.16);
 }
 
 /* active tab = gold */
