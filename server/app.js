@@ -37,24 +37,7 @@ app.get("/connect", async(req, res) => {
     }
 });
 
-app.get("/changekey", async(req, res) => {
-    try {
-        const db = await connectToDatabase();
-        
 
-        const collection = await getCollection("courses");
-
-        await collection.updateMany(
-            { area: { $exists: true } },
-            { $rename: { area: "keywords" } }
-            );
-
-        res.send(`Changed key in db ${db.databaseName}`);
-    } catch(error) {
-        console.log("Error in /changekey");
-        res.status(500).send(`Error, DB Couldn't Connect. ${error}`);
-    }
-});
 
 
 
@@ -115,6 +98,28 @@ app.get("/courses/keywords", async(req, res) => {
         res.send(keywords);
     } catch(error) {
         console.log(`Error in /courses/areas, ${error}`);
+    }
+});
+
+
+
+
+app.get("/changekey", async(req, res) => {
+    try {
+        const db = await connectToDatabase();
+        
+
+        const collection = await getCollection("courses");
+
+        await collection.updateMany(
+            { area: { $exists: true } },
+            { $rename: { area: "keywords" } }
+            );
+
+        res.send(`Changed key in db ${db.databaseName}`);
+    } catch(error) {
+        console.log("Error in /changekey");
+        res.status(500).send(`Error, DB Couldn't Connect. ${error}`);
     }
 });
 
