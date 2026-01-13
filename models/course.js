@@ -7,18 +7,18 @@ class Course {
 
     isRequired;
 
-    area;
+    keywords;
 
     languages;
     technologies;
 
     averageGPA;
 
-    constructor(code, title, isRequired, area, languages, technolgies, averageGPA) {
+    constructor(code, title, isRequired, keywords, languages, technolgies, averageGPA) {
         this.code = code;
         this.title = title;
         this.isRequired = isRequired;
-        this.area = area;
+        this.keywords = keywords;
         this.languages = languages;
         this.technologies = technolgies;
         this.averageGPA = averageGPA;
@@ -61,7 +61,7 @@ class Course {
 
     static jsonToCourse(json) {
         try {
-            return new Course(json.code, json.title, json.isRequired, json.area, json.languages, json.technologies, json.averageGPA);
+            return new Course(json.code, json.title, json.isRequired, json.keywords, json.languages, json.technologies, json.averageGPA);
         } catch(error ) {
             console.error(`Json of Course Object ${json.code} does not have needed fields... ${error}`);
             return "Error in jsonToCourse"

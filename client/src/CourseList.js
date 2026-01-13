@@ -27,11 +27,7 @@ function CourseList() {
         setCourses(courseObjs)
 
 
-        data.forEach(c => {
-  if (!Array.isArray(c.technologies)) console.log("Bad technologies:", c)
-  if (!Array.isArray(c.languages)) console.log("Bad languages:", c)
-  if (c.keywords != null && !Array.isArray(c.keywords)) console.log("Bad keywords:", c)
-})
+        
 
       } finally {
         setLoading(false)
