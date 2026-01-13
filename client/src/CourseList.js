@@ -1,7 +1,10 @@
 import './CourseList.css'
 import Course from './models/course.js'
+
 import * as requestUtil from './utility/requests.js'
 import * as filterUtil from './utility/filters.js'
+import * as Util from './utility/utility.js'
+
 import Filter from './models/filter.js'
 import React, { useEffect, useMemo, useState } from 'react'
 
@@ -152,7 +155,9 @@ function CourseList() {
                     {course.getTitle()}
                 </div> 
                 <div>
-                    <a href={`https://planetterp.com/course/${course.getCode()}`}>PlanetTerp Link</a>
+                    <a href={`https://planetterp.com/course/${course.getCode()}`} target="_blank" rel="noopener noreferrer">PlanetTerp Link</a>
+                    <br></br>
+                    <a href={`${Util.getTestudoLink(course.getCode())}`} target="_blank" rel="noopener noreferrer">Testudo Link</a>
                 </div>
               </li>
             ))}
