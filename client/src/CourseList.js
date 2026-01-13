@@ -9,11 +9,11 @@ function CourseList() {
   const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const [filters, setFilters] = useState([])          
+  const [filters, setFilters] = useState([])
   const [activeFilters, setActiveFilters] = useState([])
   const [loadingFilters, setLoadingFilter] = useState(true)
 
-  const [techLangs, setTechLangs] = useState([]);
+  const [techLangs, setTechLangs] = useState([])
   const [keywords, setKeywords] = useState([])
 
   useEffect(() => {
@@ -21,14 +21,17 @@ function CourseList() {
       try {
         const data = await requestUtil.getRequest("http://localhost:3030/courses")
         const courseObjs = data.map(c =>
-          new Course(c.code, c.title, c.isRequired ?? c.is_required,
-            c.keywords ?? [], c.languages ?? [], c.technologies ?? [], c.averageGPA)
+          new Course(
+            c.code,
+            c.title,
+            c.isRequired ?? c.is_required,
+            c.keywords ?? [],
+            c.languages ?? [],
+            c.technologies ?? [],
+            c.averageGPA
+          )
         )
         setCourses(courseObjs)
-
-
-        
-
       } finally {
         setLoading(false)
       }
@@ -43,65 +46,119 @@ function CourseList() {
 
         const langJson = await requestUtil.getRequest("http://localhost:3030/courses/languages")
         const langObjs = langJson.map(lang => new Filter(lang, (course) => course.getLanguages().includes(lang)))
-        
 
         const keywordJson = await requestUtil.getRequest("http://localhost:3030/courses/keywords")
-        
-        
         const keywordObjs = keywordJson.map(kw => new Filter(kw, (course) => course.getKeywords().includes(kw)))
 
-        setFilters([...techObjs, ...langObjs, ...keywordObjs]);
+        setFilters([...techObjs, ...langObjs, ...keywordObjs])
         setTechLangs([...techObjs, ...langObjs])
-        setKeywords(keywordObjs);
+        setKeywords(keywordObjs)
       } finally {
         setLoadingFilter(false)
       }
     })()
   }, [])
 
-  
   const activeCourses = useMemo(() => {
     return filterUtil.applyFilters(courses, activeFilters)
   }, [courses, activeFilters])
 
+  const toggle = (f) => setActiveFilters(prev => filterUtil.toggleFilter(prev, f))
+  const isActive = (f) => activeFilters.some(x => x.getName() === f.getName())
+
   return (
     <div className="CourseList">
-      <ul>
-        {loadingFilters ? `Loading Filters...` : `Loaded ${techLangs.length} languages & technologies...`}
-        {`Filter by languages and technologies`}
-        {techLangs.map(f => (
-          <li key={f.getName()}>
-            <button onClick={() => setActiveFilters(prev => filterUtil.toggleFilter(prev, f))}>
-              {f.getName()}
+      <div className="container">
+        <header className="pageHeader">
+          <h1 className="title">Courses</h1>
+          <p className="subtitle">Filter by language, technology, and keywords.</p>
+        </header>
+
+        <section className="panel">
+          <div className="panelHeader">
+            <h2>Languages & Technologies</h2>
+            <span className="meta">
+              {loadingFilters ? 'Loading…' : `${techLangs.length} available`}
+            </span>
+          </div>
+
+          <ul className="chipGrid">
+            {techLangs.map(f => (
+              <li key={f.getName()}>
+                <button
+                  className={`chip ${isActive(f) ? 'isActive' : ''}`}
+                  onClick={() => toggle(f)}
+                  type="button"
+                >
+                  {f.getName()}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="panel">
+          <div className="panelHeader">
+            <h2>Keywords</h2>
+            <span className="meta">
+              {loadingFilters ? 'Loading…' : `${keywords.length} available`}
+            </span>
+          </div>
+
+          <ul className="chipGrid">
+            {keywords.map(f => (
+              <li key={f.getName()}>
+                <button
+                  className={`chip ${isActive(f) ? 'isActive' : ''}`}
+                  onClick={() => toggle(f)}
+                  type="button"
+                >
+                  {f.getName()}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <div className="actionsRow">
+            <div className="activeCount">
+              Active filters: <strong>{activeFilters.length}</strong>
+            </div>
+            <button
+              className="clearBtn"
+              type="button"
+              onClick={() => setActiveFilters([])}
+              disabled={activeFilters.length === 0}
+            >
+              Clear filters
             </button>
-          </li>
-        ))}
-      </ul>
+          </div>
+        </section>
 
+        <section className="results">
+          <div className="resultsHeader">
+            <h2>Results</h2>
+            <span className="meta">
+              {loading ? 'Loading…' : `${activeCourses.length} course(s) found`}
+            </span>
+          </div>
 
-      <ul>
-        {loadingFilters ? `Loading Filters...` : `Loaded ${keywords.length} keywords...`}
-        {`Filter by keyword`}
-        {keywords.map(f => (
-          <li key={f.getName()}>
-            <button onClick={() => setActiveFilters(prev => filterUtil.toggleFilter(prev, f))}>
-              {f.getName()}
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <hr />
-
-      <ul>
-        {loading ? `Loading...` : `Found ${activeCourses.length} course(s)...`}
-
-        {activeCourses.map(course => (
-          <li key={course.getCode()}>
-            {course.getCode()} {course.getTitle()}
-          </li>
-        ))}
-      </ul>
+          <ul className="courseGrid">
+            {activeCourses.map(course => (
+              <li key={course.getCode()} className="courseCard">
+                <div className="courseTop">
+                  <span className="courseCode">{course.getCode()}</span>
+                </div>
+                <div className="courseTitle">
+                    {course.getTitle()}
+                </div> 
+                <div>
+                    <a href={`https://planetterp.com/course/${course.getCode()}`}>PlanetTerp Link</a>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
     </div>
   )
 }
