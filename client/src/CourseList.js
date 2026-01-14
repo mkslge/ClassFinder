@@ -1,11 +1,14 @@
 import './CourseList.css'
+
+import FilterPanel  from './FilterPanel.js'
+import CourseGrid from './CourseGrid.js'
+
 import Course from './models/course.js'
-
-import * as filterUtil from './utility/filters.js'
-import * as Util from './utility/utility.js'
-
-
 import Filter from './models/filter.js'
+import * as filterUtil from './utility/filters.js'
+
+
+
 import {api} from './modules/api.js'
 import React, { useEffect, useMemo, useState} from 'react'
 
@@ -15,7 +18,7 @@ function CourseList() {
   const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const [activeFilters, setActiveFilters] = useState([])
+  const [activeKeys, setActiveKeys] = useState(() => new Set());
 
   const [filterData, setFilterData] = useState({
     technologies: [],
@@ -59,8 +62,8 @@ function CourseList() {
   
 
   const activeCourses = useMemo(() => {
-    return filterUtil.applyFilters(courses, activeFilters)
-  }, [courses, activeFilters])
+    return filterUtil.applyFilters(courses, activeKeys)
+  }, [courses, activeKeys])
 
   const keywords = useMemo(() => {
     return filterData.keywords.map(
@@ -83,8 +86,15 @@ function CourseList() {
   }, [filterData.technologies, filterData.languages])
   
 
-  const toggle = (f) => setActiveFilters(prev => filterUtil.toggleFilter(prev, f))
-  const isActive = (f) => activeFilters.some(x => x.getName() === f.getName())
+  const toggleKey = (key) => {
+  setActiveKeys(prev => {
+    const next = new Set(prev);
+    next.has(key) ? next.delete(key) : next.add(key);
+    return next;
+  });
+  };
+
+  const isActive = (key) => activeKeys.has(key);
 
   return (
     <div className="CourseList">
@@ -94,91 +104,51 @@ function CourseList() {
           <p className="subtitle">Filter by language, technology, and keywords.</p>
         </header>
 
-        <section className="panel">
-          <div className="panelHeader">
-            <h2>Languages & Technologies</h2>
-            <span className="meta">
-              {loading ? 'Loading…' : `${techLangs.length} available`}
-            </span>
-          </div>
+        <FilterPanel title="Languages & Technologies" 
+            loading={loading} 
+            count={techLangs.length}
+            filters={techLangs}
+            isActiveKey={isActive}
+            onToggleKey={toggleKey}>
 
-          <ul className="chipGrid">
-            {techLangs.map(f => (
-              <li key={f.getName()}>
+        </FilterPanel>
+
+        <FilterPanel
+            title="Keywords"
+            loading={loading}
+            count={keywords.length}
+            filters={keywords}
+            isActiveKey={isActive}
+            onToggleKey={toggleKey}
+            footer={
+                <div className="actionsRow">
+                <div className="activeCount">
+                    Active filters: <strong>{activeKeys.size}</strong>
+                </div>
                 <button
-                  className={`chip ${isActive(f) ? 'isActive' : ''}`}
-                  onClick={() => toggle(f)}
-                  type="button"
+                    className="clearBtn"
+                    type="button"
+                    onClick={() => setActiveKeys(new Set())}
+                    disabled={activeKeys.size === 0}
                 >
-                  {f.getName()}
+                    Clear filters
                 </button>
-              </li>
-            ))}
-          </ul>
-        </section>
+                </div>
+            }
+        />
 
-        <section className="panel">
-          <div className="panelHeader">
-            <h2>Keywords</h2>
-            <span className="meta">
-              {loading ? 'Loading…' : `${keywords.length} available`}
-            </span>
-          </div>
-
-          <ul className="chipGrid">
-            {keywords.map(f => (
-              <li key={f.getName()}>
-                <button
-                  className={`chip ${isActive(f) ? 'isActive' : ''}`}
-                  onClick={() => toggle(f)}
-                  type="button"
-                >
-                  {f.getName()}
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          <div className="actionsRow">
-            <div className="activeCount">
-              Active filters: <strong>{activeFilters.length}</strong>
-            </div>
-            <button
-              className="clearBtn"
-              type="button"
-              onClick={() => setActiveFilters([])}
-              disabled={activeFilters.length === 0}
-            >
-              Clear filters
-            </button>
-          </div>
-        </section>
+        
 
         <section className="results">
           <div className="resultsHeader">
             <h1 className="title">Courses</h1>
             <span className="meta">
-              {loading ? 'Loading…' : `${activeCourses.length} course(s) found`}
+              {loading ? 'Loading…' : filterUtil.getFilterMessage("course", activeCourses.length)}
             </span>
           </div>
 
-          <ul className="courseGrid">
-            {activeCourses.map(course => (
-              <li key={course.getCode()} className="courseCard">
-                <div className="courseTop">
-                  <span className="courseCode">{course.getCode()}</span>
-                </div>
-                <div className="courseTitle">
-                    {course.getTitle()}
-                </div> 
-                <div>
-                    <a href={`https://planetterp.com/course/${course.getCode()}`} target="_blank" rel="noopener noreferrer">PlanetTerp Link</a>
-                    <br></br>
-                    <a href={`${Util.getTestudoLink(course.getCode())}`} target="_blank" rel="noopener noreferrer">Testudo Link</a>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <CourseGrid courses={activeCourses}>
+          </CourseGrid>
         </section>
       </div>
     </div>

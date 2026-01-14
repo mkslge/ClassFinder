@@ -3,9 +3,13 @@
 class Filter {
     key;
     filterFunction;
+    name;
     constructor(key, filterFunction) {
         this.key = key;
         this.filterFunction = filterFunction;
+        
+        let cutoff = this.key.indexOf(':') + 1;
+        this.name = this.key.substring(cutoff);
     }
 
     getKey() {
@@ -18,8 +22,7 @@ class Filter {
     }
 
     getName() {
-        let cutoff = this.key.indexOf(':');
-        return this.key.substring(cutoff + 1);
+        return this.name;
     }
 
 }
