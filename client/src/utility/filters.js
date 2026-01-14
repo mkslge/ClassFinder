@@ -47,7 +47,7 @@ export function applyFilters(courses, activeKeys) {
   });
 }
 
-export function getFilterMessage(name, amount) {
+export function getFindMessage(name, amount) {
     switch (amount) {
         case 0:
             return `No ${name}s found`
