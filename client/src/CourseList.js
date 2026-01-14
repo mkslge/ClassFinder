@@ -84,7 +84,7 @@ function CourseList() {
     <div className="CourseList">
       <div className="container">
         <header className="pageHeader">
-          <h1 className="title">Courses</h1>
+          <h1 className="title">Filters</h1>
           <p className="subtitle">Filter by language, technology, and keywords.</p>
         </header>
 
@@ -150,7 +150,7 @@ function CourseList() {
 
         <section className="results">
           <div className="resultsHeader">
-            <h2>Results</h2>
+            <h1 className="title">Courses</h1>
             <span className="meta">
               {loading ? 'Loading…' : `${activeCourses.length} course(s) found`}
             </span>

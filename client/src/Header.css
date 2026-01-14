@@ -30,6 +30,7 @@
   width: 100%;
   padding: 0;            /* full-bleed bar */
   margin: 0;
+  background-color: var(--muted);
 }
 
 /* ---- Layout ---- */
@@ -42,19 +43,19 @@
   justify-content: flex-start;
   gap: 18px;
 
-  /* full-width with comfortable inner gutters */
+
   padding: 0 clamp(16px, 5vw, 48px);
 
   background: var(--bg);
 
-  /* square / institutional */
+
   border: none;
   border-radius: 0;
 
-  /* PlanetTerp-ish bottom rule */
+
   border-bottom: 3px solid var(--accent);
 
-  /* no glass, no shadow */
+
   box-shadow: none;
 }
 

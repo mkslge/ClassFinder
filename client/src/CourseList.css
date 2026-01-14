@@ -2,11 +2,11 @@
   --umd-red: #C8102E;
   --umd-gold: #EAAA00;
 
-  --bg: #1c1e23;                  /* page background */
+  --bg: light dark;                  /* page background */
   --panel: rgba(255, 255, 255, 0.06);
   --panelBorder: rgba(255, 255, 255, 0.10);
 
-  --text: rgba(255, 255, 255, 0.92);
+  --text: light-dark(rgba(0, 0, 0, 0.92), rgba(255, 255, 255, 0));
   --muted: rgba(255, 255, 255, 0.72);
 
   --shadow: 0 14px 38px rgba(0, 0, 0, 0.45);
@@ -188,7 +188,7 @@
   display: inline-block;
   font-weight: 700;
   letter-spacing: 0.6px;
-  color: #fff;
+  color: light-dark(rgba(0, 0, 0, 0.92), rgba(255, 255, 255, 0));;
   border-bottom: 2px solid rgba(234, 0, 0, 0.7);
   padding-bottom: 2px;
 }
@@ -206,7 +206,7 @@
   line-height: 1.25;
 }
 
-/* Responsive */
+
 @media (max-width: 900px) {
   .courseGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
