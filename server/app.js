@@ -111,7 +111,6 @@ app.post("/addvisitor", async(req, res) => {
 visitorCount: 1}},
             {returnDocument: "after"}
         )
-        console.log(result);
         res.json(
             {success:true, visitors: result.visitorCount}
         )
