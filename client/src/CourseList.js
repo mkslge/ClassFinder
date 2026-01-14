@@ -1,36 +1,34 @@
 import './CourseList.css'
 import Course from './models/course.js'
 
-import * as requestUtil from './utility/requests.js'
 import * as filterUtil from './utility/filters.js'
 import * as Util from './utility/utility.js'
 
 
 import Filter from './models/filter.js'
 import {api} from './modules/api.js'
-import React, { useEffect, useMemo, useState, useRef } from 'react'
+import React, { useEffect, useMemo, useState} from 'react'
 
 function CourseList() {
-  const ran = useRef(false);
+  
   
   const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const [filters, setFilters] = useState([])
   const [activeFilters, setActiveFilters] = useState([])
   const [loadingFilters, setLoadingFilter] = useState(true)
 
-  const [techLangs, setTechLangs] = useState([])
-  const [keywords, setKeywords] = useState([])
+  const [filterData, setFilterData] = useState({
+    technologies: [],
+    languages: [],
+    keywords: [],
+  })
+
 
   
   
   useEffect(() => {
-    if(ran.current ) {
-        return;
-    } else {
-        ran.current = true;
-    }
+
     (async () => {
       try {
         api.addVisitor().catch( () => {});
@@ -43,28 +41,16 @@ function CourseList() {
         ])
         
         
-        const courseObjs = courseJson.map(c =>
-          new Course(
-            c.code,
-            c.title,
-            c.isRequired ?? c.is_required,
-            c.keywords ?? [],
-            c.languages ?? [],
-            c.technologies ?? [],
-            c.averageGPA
-          )
-        )
-
-        const techObjs = techJson.map(tech => new Filter(tech, (course) => course.getTechnologies().includes(tech)))
-
-        const langObjs = langJson.map(lang => new Filter(lang, (course) => course.getLanguages().includes(lang)))
-
-        const keywordObjs = keywordJson.map(kw => new Filter(kw, (course) => course.getKeywords().includes(kw)))
+        const courseObjs = Course.mapCourseJson(courseJson)
 
         setCourses(courseObjs)
-        setFilters([...techObjs, ...langObjs, ...keywordObjs])
-        setTechLangs([...techObjs, ...langObjs])
-        setKeywords(keywordObjs)
+        setFilterData(
+            {
+                technologies: techJson,
+                languages: langJson,
+                keywords: keywordJson
+            });
+
       } finally {
         setLoading(false)
         setLoadingFilter(false);
@@ -77,6 +63,27 @@ function CourseList() {
   const activeCourses = useMemo(() => {
     return filterUtil.applyFilters(courses, activeFilters)
   }, [courses, activeFilters])
+
+  const keywords = useMemo(() => {
+    return filterData.keywords.map(
+        kw => new Filter(kw, 
+            (course) => course.getKeywords().includes(kw)
+        )
+    );
+  }, [filterData.keywords])
+
+
+  const techLangs = useMemo(() => {
+    return [
+        ...filterData.technologies.map(
+            tech => new Filter(tech, (course) => course.getTechnologies().includes(tech))
+        ),
+        ...filterData.languages.map(
+            lang => new Filter(lang, (course) => course.getLanguages().includes(lang))
+        )
+    ]
+  }, [filterData.technologies, filterData.languages])
+  
 
   const toggle = (f) => setActiveFilters(prev => filterUtil.toggleFilter(prev, f))
   const isActive = (f) => activeFilters.some(x => x.getName() === f.getName())
