@@ -137,13 +137,11 @@ function CourseList() {
             }
         />
 
-        
-
         <section className="results">
           <div className="resultsHeader">
             <h1 className="title">Courses</h1>
             <span className="meta">
-              {loading ? 'Loading…' : filterUtil.getFilterMessage("course", activeCourses.length)}
+              {loading ? 'Loading…' : filterUtil.getFindMessage("course", activeCourses.length)}
             </span>
           </div>
 
