@@ -16,7 +16,6 @@ function CourseList() {
   const [loading, setLoading] = useState(true)
 
   const [activeFilters, setActiveFilters] = useState([])
-  const [loadingFilters, setLoadingFilter] = useState(true)
 
   const [filterData, setFilterData] = useState({
     technologies: [],
@@ -53,7 +52,6 @@ function CourseList() {
 
       } finally {
         setLoading(false)
-        setLoadingFilter(false);
       }
     })()
   }, [])
@@ -66,7 +64,7 @@ function CourseList() {
 
   const keywords = useMemo(() => {
     return filterData.keywords.map(
-        kw => new Filter(kw, 
+        kw => new Filter(`kw:${kw}`, 
             (course) => course.getKeywords().includes(kw)
         )
     );
@@ -76,10 +74,10 @@ function CourseList() {
   const techLangs = useMemo(() => {
     return [
         ...filterData.technologies.map(
-            tech => new Filter(tech, (course) => course.getTechnologies().includes(tech))
+            tech => new Filter(`tech:${tech}`, (course) => course.getTechnologies().includes(tech))
         ),
         ...filterData.languages.map(
-            lang => new Filter(lang, (course) => course.getLanguages().includes(lang))
+            lang => new Filter(`lang:${lang}`, (course) => course.getLanguages().includes(lang))
         )
     ]
   }, [filterData.technologies, filterData.languages])
@@ -100,7 +98,7 @@ function CourseList() {
           <div className="panelHeader">
             <h2>Languages & Technologies</h2>
             <span className="meta">
-              {loadingFilters ? 'Loading…' : `${techLangs.length} available`}
+              {loading ? 'Loading…' : `${techLangs.length} available`}
             </span>
           </div>
 
@@ -123,7 +121,7 @@ function CourseList() {
           <div className="panelHeader">
             <h2>Keywords</h2>
             <span className="meta">
-              {loadingFilters ? 'Loading…' : `${keywords.length} available`}
+              {loading ? 'Loading…' : `${keywords.length} available`}
             </span>
           </div>
 

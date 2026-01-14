@@ -1,20 +1,25 @@
 
 
 class Filter {
-    name;
+    key;
     filterFunction;
-    constructor(name, filterFunction) {
-        this.name = name;
+    constructor(key, filterFunction) {
+        this.key = key;
         this.filterFunction = filterFunction;
     }
 
-    getName() {
-        return this.name;
+    getKey() {
+        return this.key;
     }
 
 
     getFilterFunction() {
         return this.filterFunction;
+    }
+
+    getName() {
+        let cutoff = this.key.indexOf(':');
+        return this.key.substring(cutoff + 1);
     }
 
 }
