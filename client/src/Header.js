@@ -15,11 +15,6 @@ function Header() {
             </a>
           </li>
 
-          <li className="menuItem">
-            <a className="menuLink" href="/" id="projects">
-              Courses
-            </a>
-          </li>
 
           <li className="menuItem">
             <a

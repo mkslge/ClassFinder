@@ -114,8 +114,6 @@ visitorCount: 1}},
         res.json(
             {success:true, visitors: result.visitorCount}
         )
-        
-        
 
     } catch(error) {
         console.error(`Error in /addvisitor, ${error}`)

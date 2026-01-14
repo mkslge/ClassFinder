@@ -47,6 +47,22 @@ class Course {
     getAverageGPA() {
         return this.averageGPA;
     }
+
+    static mapCourseJson(jsonList) {
+        return jsonList.map(courseJson => this.jsonToCourse(courseJson))
+    }
+
+    static jsonToCourse(json) {
+        return new Course(
+                    json.code,
+                    json.title,
+                    json.isRequired ?? json.is_required,
+                    json.keywords ?? [],
+                    json.languages ?? [],
+                    json.technologies ?? [],
+                    json.averageGPA
+        )
+    }
     
 }
 

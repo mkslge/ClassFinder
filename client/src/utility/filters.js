@@ -25,10 +25,37 @@ export function toggleFilter(activeFilters, filter) {
     : [...activeFilters, filter]
 }
 
-export function applyFilters(allCourses, activeFilters) {
-  return activeFilters.reduce(
-    (acc, f) => acc.filter(f.getFilterFunction()),
-    allCourses
-  )
+export function applyFilters(courses, activeKeys) {
+  if (!activeKeys || activeKeys.size === 0) return courses;
+
+  const tech = [];
+  const lang = [];
+  const kw = [];
+
+  for (const key of activeKeys) {
+    const [type, value] = key.split(":");
+    if (type === "tech") tech.push(value);
+    else if (type === "lang") lang.push(value);
+    else if (type === "kw") kw.push(value);
+  }
+
+  return courses.filter(course => {
+    const techOk = tech.length === 0 || tech.some(t => course.getTechnologies().includes(t));
+    const langOk = lang.length === 0 || lang.some(l => course.getLanguages().includes(l));
+    const kwOk = kw.length === 0 || kw.some(k => course.getKeywords().includes(k));
+    return techOk && langOk && kwOk;
+  });
 }
+
+export function getFilterMessage(name, amount) {
+    switch (amount) {
+        case 0:
+            return `No ${name}s found`
+        case 1:
+            return `1 ${name} found`
+        default:
+            return `${amount} ${name}s found`
+    }
+}
+
 
