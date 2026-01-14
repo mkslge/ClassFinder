@@ -5,10 +5,14 @@ import * as requestUtil from './utility/requests.js'
 import * as filterUtil from './utility/filters.js'
 import * as Util from './utility/utility.js'
 
+
 import Filter from './models/filter.js'
-import React, { useEffect, useMemo, useState } from 'react'
+import {api} from './modules/api.js'
+import React, { useEffect, useMemo, useState, useRef } from 'react'
 
 function CourseList() {
+  const ran = useRef(false);
+  
   const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -19,11 +23,27 @@ function CourseList() {
   const [techLangs, setTechLangs] = useState([])
   const [keywords, setKeywords] = useState([])
 
+  
+  
   useEffect(() => {
+    if(ran.current ) {
+        return;
+    } else {
+        ran.current = true;
+    }
     (async () => {
       try {
-        const data = await requestUtil.getRequest("http://localhost:3030/courses")
-        const courseObjs = data.map(c =>
+        api.addVisitor().catch( () => {});
+
+        const [courseJson, techJson, langJson, keywordJson] = await Promise.all([
+            api.getCourses(),
+            api.getTechnologies(),
+            api.getLanguages(),
+            api.getKeywords(),
+        ])
+        
+        
+        const courseObjs = courseJson.map(c =>
           new Course(
             c.code,
             c.title,
@@ -34,33 +54,25 @@ function CourseList() {
             c.averageGPA
           )
         )
-        setCourses(courseObjs)
-      } finally {
-        setLoading(false)
-      }
-    })()
-  }, [])
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const techJson = await requestUtil.getRequest("http://localhost:3030/courses/technologies")
         const techObjs = techJson.map(tech => new Filter(tech, (course) => course.getTechnologies().includes(tech)))
 
-        const langJson = await requestUtil.getRequest("http://localhost:3030/courses/languages")
         const langObjs = langJson.map(lang => new Filter(lang, (course) => course.getLanguages().includes(lang)))
 
-        const keywordJson = await requestUtil.getRequest("http://localhost:3030/courses/keywords")
         const keywordObjs = keywordJson.map(kw => new Filter(kw, (course) => course.getKeywords().includes(kw)))
 
+        setCourses(courseObjs)
         setFilters([...techObjs, ...langObjs, ...keywordObjs])
         setTechLangs([...techObjs, ...langObjs])
         setKeywords(keywordObjs)
       } finally {
-        setLoadingFilter(false)
+        setLoading(false)
+        setLoadingFilter(false);
       }
     })()
   }, [])
+
+  
 
   const activeCourses = useMemo(() => {
     return filterUtil.applyFilters(courses, activeFilters)
@@ -73,7 +85,7 @@ function CourseList() {
     <div className="CourseList">
       <div className="container">
         <header className="pageHeader">
-          <h1 className="title">Courses</h1>
+          <h1 className="title">Filters</h1>
           <p className="subtitle">Filter by language, technology, and keywords.</p>
         </header>
 
@@ -139,7 +151,7 @@ function CourseList() {
 
         <section className="results">
           <div className="resultsHeader">
-            <h2>Results</h2>
+            <h1 className="title">Courses</h1>
             <span className="meta">
               {loading ? 'Loading…' : `${activeCourses.length} course(s) found`}
             </span>

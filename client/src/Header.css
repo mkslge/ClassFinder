@@ -1,25 +1,17 @@
-/* ================================
-   Header.css — UMD / PlanetTerp vibe
-   Full-width, square, crisp accents
-=================================== */
 
-/* ---- Base / Theme ---- */
 :root {
-  /* UMD core */
-  --umd-red: #C8102E;   /* classic Maryland red */
-  --umd-gold: #EAAA00;  /* official-style gold */
+  
+  --umd-red: #C8102E; 
+  --umd-gold: #EAAA00; 
 
-  /* Navbar */
-  --bg: var(--umd-red);                  /* solid red */
-  --border: rgba(0, 0, 0, 0.12);         /* subtle separator if needed */
+  
+  --bg: var(--umd-red);               
+  --border: light-dark(rgba(49, 47, 47, 0.92), rgba(147, 142, 142, 0.996));
+  --text: light-dark(rgba(0, 0, 0, 0.92), rgba(255, 255, 255, 0));
 
-  /* Text */
-  --text: #ffffff;
-  --muted: rgba(255, 255, 255, 0.82);
-
-  /* Accents */
-  --accent: var(--umd-gold);
-  --accentSoft: rgba(234, 170, 0, 0.18);
+  --muted: light-dark(rgba(169, 164, 164, 0.994), rgba(49, 49, 49, 0.996));
+  --accent: var(--umd-red);
+  --accentSoft: rgba(234, 0, 0, 0.18);
 }
 
 /* ---- Wrapper ---- */
@@ -30,6 +22,7 @@
   width: 100%;
   padding: 0;            /* full-bleed bar */
   margin: 0;
+  background-color: var(--text);
 }
 
 /* ---- Layout ---- */
@@ -42,19 +35,19 @@
   justify-content: flex-start;
   gap: 18px;
 
-  /* full-width with comfortable inner gutters */
+
   padding: 0 clamp(16px, 5vw, 48px);
 
   background: var(--bg);
 
-  /* square / institutional */
+
   border: none;
   border-radius: 0;
 
-  /* PlanetTerp-ish bottom rule */
+
   border-bottom: 3px solid var(--accent);
 
-  /* no glass, no shadow */
+
   box-shadow: none;
 }
 
@@ -90,7 +83,6 @@
   margin: 0;
 }
 
-/* ---- Links ---- */
 .menuLink {
   display: inline-flex;
   align-items: center;
@@ -98,10 +90,10 @@
 
   padding: 10px 14px;
 
-  /* square tabs */
+  
   border-radius: 0;
-
-  color: var(--muted);
+  background-color: light-dark(rgba(170, 169, 169, 0.645), rgba(72, 72, 72, 0.645));/*var(--muted);*/
+  color: var(--text);
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
@@ -111,10 +103,10 @@
   transition: background 140ms ease, color 140ms ease, transform 140ms ease;
 }
 
-/* crisp gold wash on hover */
+
 .menuLink:hover {
   color: var(--text);
-  background: rgba(234, 170, 0, 0.16);
+  background: rgba(234, 0, 0, 0.16);
 }
 
 /* active tab = gold */

@@ -102,7 +102,25 @@ app.get("/courses/keywords", async(req, res) => {
 });
 
 
+app.post("/addvisitor", async(req, res) => {
+    try {
+        const visitorColl = await getCollection("visitors");
+        const result = await visitorColl.findOneAndUpdate(
+            {},
+            {$inc: {
+visitorCount: 1}},
+            {returnDocument: "after"}
+        )
+        res.json(
+            {success:true, visitors: result.visitorCount}
+        )
+        
+        
 
+    } catch(error) {
+        console.error(`Error in /addvisitor, ${error}`)
+    }
+});
 
 app.get("/changekey", async(req, res) => {
     try {

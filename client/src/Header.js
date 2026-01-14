@@ -5,7 +5,7 @@ function Header() {
     <header className="Header">
       <nav className="menu" aria-label="Primary navigation">
         <a className="brand" href="/" aria-label="Go to homepage">
-          ClassFinder
+          TerpCS Hub
         </a>
 
         <ul className="menuList">
