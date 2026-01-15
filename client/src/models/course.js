@@ -63,6 +63,10 @@ class Course {
                     json.averageGPA
         )
     }
+
+    static sortCourses(list) {
+        return list.sort((c1, c2) => c1.code.localeCompare(c2.code))
+    }
     
 }
 

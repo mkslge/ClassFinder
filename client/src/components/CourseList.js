@@ -43,7 +43,8 @@ function CourseList() {
         ])
         
         
-        const courseObjs = Course.mapCourseJson(courseJson)
+        let courseObjs = Course.mapCourseJson(courseJson)
+        courseObjs = Course.sortCourses(courseObjs)
 
         setCourses(courseObjs)
         setFilterData(
