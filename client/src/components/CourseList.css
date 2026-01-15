@@ -224,3 +224,48 @@
     align-items: stretch;
   }
 }
+
+.courseCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.courseHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.courseCode {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  opacity: 0.85;
+}
+
+.courseTitle {
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.courseActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.courseLink {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.courseLink.secondary {
+  opacity: 0.8;
+}
+
+.courseLink:hover {
+  text-decoration: underline;
+}
