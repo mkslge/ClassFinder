@@ -3,13 +3,13 @@ import './CourseList.css'
 import FilterPanel  from './FilterPanel.js'
 import CourseGrid from './CourseGrid.js'
 
-import Course from './models/course.js'
-import Filter from './models/filter.js'
-import * as filterUtil from './utility/filters.js'
+import Course from '../models/course.js'
+import Filter from '../models/filter.js'
+import * as filterUtil from '../utility/filters.js'
 
 
 
-import {api} from './modules/api.js'
+import {api} from '../modules/api.js'
 import React, { useEffect, useMemo, useState} from 'react'
 
 function CourseList() {

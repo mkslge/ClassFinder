@@ -1,5 +1,4 @@
 import './Header.css';
-
 function Header() {
   return (
     <header className="Header">
@@ -11,7 +10,14 @@ function Header() {
         <ul className="menuList">
           <li className="menuItem">
             <a className="menuLink active" href="/" id="home">
+            
               Home
+            </a>
+          </li>
+
+          <li className="menuItem">
+            <a className="menuLink" href="/about" id="about">
+              About
             </a>
           </li>
 
