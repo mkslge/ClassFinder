@@ -1,0 +1,75 @@
+:root {
+  --umd-red: #C8102E;
+  --umd-gold: #EAAA00;
+
+  --page-bg: #f2f2f2;
+  --panel-bg: #ffffff;
+  --border: rgba(0, 0, 0, 0.10);
+
+  --text: rgba(0, 0, 0, 0.86);
+  --muted: rgba(0, 0, 0, 0.60);
+
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.12);
+
+  --radius: 10px;
+}
+
+.aboutPage {
+  min-height: calc(100vh - 64px);
+  background: var(--page-bg);
+  color: var(--text);
+
+}
+
+.aboutContainer {
+  width: min(900px, 100%);
+  margin: 0 auto;
+  padding: 32px clamp(16px, 5vw, 48px) 48px;
+  background-color: var(--page-bg);
+}
+
+
+.aboutHeader {
+  margin-bottom: 24px;
+  border-left: 4px solid var(--umd-red);
+  padding-left: 14px;
+}
+
+.aboutHeader .title {
+  margin: 0;
+  font-size: clamp(26px, 2.5vw, 36px);
+  letter-spacing: 0.3px;
+}
+
+.aboutHeader .subtitle {
+  margin-top: 6px;
+  color: var(--muted);
+  max-width: 65ch;
+}
+
+
+.aboutPanel {
+  margin-top: 18px;
+  padding: 18px 20px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panelBorder);
+  box-shadow: var(--shadow);
+}
+
+.aboutPanel h2 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.aboutPanel p {
+  margin: 0;
+  line-height: 1.6;
+  max-width: 70ch;
+}
+
+.aboutPanel + .aboutPanel {
+  margin-top: 14px;
+}

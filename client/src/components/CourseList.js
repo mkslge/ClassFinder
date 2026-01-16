@@ -1,4 +1,4 @@
-import './style/CourseList.css'
+import '../style/CourseList.css'
 
 import FilterPanel  from './FilterPanel.js'
 import CourseGrid from './CourseGrid.js'
@@ -28,6 +28,8 @@ function CourseList() {
 
   const [sortKey, setSortKey] = useState("code"); // "code" | "gpa"
   const [sortAsc, setSortAsc] = useState(true);
+
+  const [filterMode, setFilterMode] = useState("OR"); // can be "OR" or "AND"
 
 
   
@@ -66,8 +68,8 @@ function CourseList() {
   
 
   let activeCourses = useMemo(() => {
-    return filterUtil.applyFilters(courses, activeKeys)
-  }, [courses, activeKeys])
+    return filterUtil.applyFilters(courses, activeKeys, filterMode)
+  }, [courses, activeKeys, filterMode])
 
   const keywords = useMemo(() => {
     return filterData.keywords.map(
@@ -146,6 +148,34 @@ function CourseList() {
                 <div className="activeCount">
                     Active filters: <strong>{activeKeys.size}</strong>
                 </div>
+
+                <div className="filterModeToggle">
+                  <span className="filterModeLabel">Match</span>
+
+                  <div className="segmentedControl">
+                    <button
+                      className={`segment ${filterMode === "OR" ? "active" : ""}`}
+                      onClick={() => setFilterMode("OR")}
+                      type="button"
+                    >
+                      Any filter
+                    </button>
+
+                    <button
+                      className={`segment ${filterMode === "AND" ? "active" : ""}`}
+                      onClick={() => setFilterMode("AND")}
+                      type="button"
+                    >
+                      All filters
+                    </button>
+
+                    
+
+                  </div>
+
+                  
+                </div>
+
                 <button
                     className="clearBtn"
                     type="button"
