@@ -1,0 +1,154 @@
+:root {
+  --umd-red: #C8102E;
+  --umd-gold: #EAAA00;
+
+
+  --bg: var(--umd-red);
+
+
+  --text-on-dark: rgba(255, 255, 255, 0.95);
+  --text-muted-on-dark: rgba(255, 255, 255, 0.78);
+
+
+  --overlay-hover: rgba(255, 255, 255, 0.15);
+  --overlay-active: rgba(255, 255, 255, 0.18);
+
+
+  --focus-ring: rgba(255, 255, 255, 0.85);
+
+
+  --toolbar-height: 80px;
+  --max-width: 1280px;
+
+
+  --shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+
+.Header {
+  --header-bg: #C8102E;
+  --header-text: rgba(255, 255, 255, 0.95);
+  --header-hover: rgba(255, 255, 255, 0.15);
+  --header-active: rgba(255, 255, 255, 0.18);
+  --header-focus: rgba(255, 255, 255, 0.85);
+  --toolbar-height: 80px;
+  --max-width: 1280px;
+  --shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+
+  background: var(--header-bg);
+  box-shadow: var(--shadow);
+}
+
+
+.menu {
+  height: var(--toolbar-height);
+  max-width: var(--max-width);
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 0 16px;
+}
+
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+
+  color: var(--text-on-dark);
+  text-decoration: none;
+  font-weight: 1200;
+  font-size: 32px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+
+  padding: 8px 10px;
+}
+
+.brand:hover {
+  background: var(--overlay-hover);
+}
+
+.brand:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+
+.menuList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+
+.menuLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-on-dark, rgba(255,255,255,0.95));
+  text-decoration: none;
+  font-weight: 1500;
+  font-size: 24px;
+
+  padding: 8px 12px;
+  transition: background-color 140ms ease, transform 140ms ease;
+}
+
+.menuLink:hover {
+  background: var(--overlay-hover);
+}
+
+.menuLink:active {
+  background: var(--overlay-active);
+}
+
+
+.menuLink.active {
+  background: var(--overlay-active);
+}
+
+
+.menuLink:focus-visible {
+  outline: none;
+  background: var(--overlay-hover);
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+.menuSpacer {
+  flex: 1;
+}
+
+
+@media (max-width: 560px) {
+  .menu {
+    height: auto;
+    padding: 10px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .menuList {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .menuLink {
+    padding: 8px 10px;
+  }
+}

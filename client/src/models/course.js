@@ -48,6 +48,25 @@ class Course {
         return this.averageGPA;
     }
 
+    getAverageGPADisplay() {
+        return this.averageGPA !== -1 ? this.averageGPA : "Unknown";
+    }
+
+    getGPAColor(aGPA) {
+        if (aGPA === "Unknown" || Number.isNaN(Number(aGPA))) return "#888";
+
+        const gpa = Number(aGPA);
+        const clamped = Math.max(0, Math.min(4, gpa));
+        const t = clamped / 4; // 0 → 1
+
+        const r = Math.round(255 * (1 - t));
+        const g = Math.round(180 * t + 50);
+        const b = 80;
+
+        return `rgb(${r}, ${g}, ${b})`;
+        }
+
+
     static mapCourseJson(jsonList) {
         return jsonList.map(courseJson => this.jsonToCourse(courseJson))
     }
@@ -62,6 +81,10 @@ class Course {
                     json.technologies ?? [],
                     json.averageGPA
         )
+    }
+
+    static sortCourses(list) {
+        return list.sort((c1, c2) => c1.code.localeCompare(c2.code))
     }
     
 }
