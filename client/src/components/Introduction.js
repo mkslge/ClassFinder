@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as Constant from '../utility/constants'
 
 function Introduction() {
   const [isOpen, setIsOpen] = useState(true);
@@ -35,7 +36,7 @@ function Introduction() {
 
           <div className="introductionActions">
             <a
-              href="https://github.com/mkslge/ClassFinder"
+              href={Constant.GITHUB_LINK}
               target="_blank"
               rel="noopener noreferrer"
               className="linkAction"

@@ -57,7 +57,7 @@ class Course {
 
         const gpa = Number(aGPA);
         const clamped = Math.max(0, Math.min(4, gpa));
-        const t = clamped / 4; // 0 → 1
+        const t = clamped / 4; 
 
         const r = Math.round(255 * (1 - t));
         const g = Math.round(180 * t + 50);

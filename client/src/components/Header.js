@@ -1,5 +1,6 @@
-import './style/Header.css';
-function Header() {
+import '../style/Header.css';
+import * as Constant from '../utility/constants'
+function Header(activePage) {
   return (
     <header className="Header">
       <nav className="menu" aria-label="Primary navigation">
@@ -9,14 +10,14 @@ function Header() {
 
         <ul className="menuList">
           <li className="menuItem">
-            <a className="menuLink active" href="/" id="home">
+            <a className= {activePage === "home" ? "menuLink active" : "menuLink"}href="/" id="home">
             
               Home
             </a>
           </li>
 
           <li className="menuItem">
-            <a className="menuLink" href="/about" id="about">
+            <a className={activePage === "about" ? "menuLink active" : "menuLink"} href="/about" id="about">
               About
             </a>
           </li>
@@ -24,9 +25,9 @@ function Header() {
 
           <li className="menuItem">
             <a
-              className="menuLink"
-              href="https://github.com/mkslge/ClassFinder"
-              id="experience"
+              className={activePage === "github" ? "menuLink active" : "menuLink"} 
+              href={Constant.GITHUB_LINK}
+              id="github"
               target="_blank"
               rel="noreferrer"
             >

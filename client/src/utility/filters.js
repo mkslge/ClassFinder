@@ -25,7 +25,7 @@ export function toggleFilter(activeFilters, filter) {
     : [...activeFilters, filter]
 }
 
-export function applyFilters(courses, activeKeys) {
+export function applyFilters(courses, activeKeys, filterMode) {
   if (!activeKeys || activeKeys.size === 0) return courses;
 
   const tech = [];
@@ -40,10 +40,18 @@ export function applyFilters(courses, activeKeys) {
   }
 
   return courses.filter(course => {
-    const techOk = tech.length === 0 || tech.some(t => course.getTechnologies().includes(t));
-    const langOk = lang.length === 0 || lang.some(l => course.getLanguages().includes(l));
-    const kwOk = kw.length === 0 || kw.some(k => course.getKeywords().includes(k));
-    return techOk && langOk && kwOk;
+    if(filterMode === "AND") {
+        const techOk = tech.length === 0 || tech.every(t => course.getTechnologies().includes(t));
+        const langOk = lang.length === 0 || lang.every(l => course.getLanguages().includes(l));
+        const kwOk = kw.length === 0 || kw.every(k => course.getKeywords().includes(k));
+        
+        return techOk && langOk && kwOk;
+    } else { /** OR filter mode */
+        const techOk = tech.length === 0 || tech.some(t => course.getTechnologies().includes(t));
+        const langOk = lang.length === 0 || lang.some(l => course.getLanguages().includes(l));
+        const kwOk = kw.length === 0 || kw.some(k => course.getKeywords().includes(k));
+        return techOk && langOk && kwOk;
+    }
   });
 }
 
@@ -56,6 +64,10 @@ export function getFindMessage(name, amount) {
         default:
             return `${amount} ${name}s found`
     }
+}
+
+export function toggleFilterMode(currMode) {
+    return currMode === "OR" ? "AND" : "OR";
 }
 
 
