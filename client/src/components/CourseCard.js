@@ -4,6 +4,7 @@ import * as Util from "../utility/utility.js";
 export default function CourseCard({ course }) {
   const code = course.getCode();
   const title = course.getTitle();
+  const aGPA = course.getAverageGPADisplay();
 
   return (
     <li className="courseCard">
@@ -12,6 +13,17 @@ export default function CourseCard({ course }) {
       </div>
 
       <div className="courseTitle">{title}</div>
+
+      <div className="courseMeta">
+        Avg GPA:
+        <span
+          className="courseGPA"
+          style={{ color: course.getGPAColor(aGPA) }}
+        >
+          {aGPA === "Unknown" ? ` Unknown` : ` ${aGPA}`}
+        </span>
+      </div>
+
 
       <div className="courseActions">
         <a

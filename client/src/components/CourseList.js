@@ -1,13 +1,13 @@
-import './CourseList.css'
+import './style/CourseList.css'
 
 import FilterPanel  from './FilterPanel.js'
 import CourseGrid from './CourseGrid.js'
 
 import Course from '../models/course.js'
 import Filter from '../models/filter.js'
+
 import * as filterUtil from '../utility/filters.js'
-
-
+import * as sortUtil from '../utility/sort.js'
 
 import {api} from '../modules/api.js'
 import React, { useEffect, useMemo, useState} from 'react'
@@ -25,6 +25,9 @@ function CourseList() {
     languages: [],
     keywords: [],
   })
+
+  const [sortKey, setSortKey] = useState("code"); // "code" | "gpa"
+  const [sortAsc, setSortAsc] = useState(true);
 
 
   
@@ -44,7 +47,7 @@ function CourseList() {
         
         
         let courseObjs = Course.mapCourseJson(courseJson)
-        courseObjs = Course.sortCourses(courseObjs)
+        courseObjs = sortUtil.sortCoursesByCode(courseObjs)
 
         setCourses(courseObjs)
         setFilterData(
@@ -62,7 +65,7 @@ function CourseList() {
 
   
 
-  const activeCourses = useMemo(() => {
+  let activeCourses = useMemo(() => {
     return filterUtil.applyFilters(courses, activeKeys)
   }, [courses, activeKeys])
 
@@ -73,6 +76,23 @@ function CourseList() {
         )
     );
   }, [filterData.keywords])
+
+  activeCourses = useMemo(() => {
+    let result = [...activeCourses];
+
+    if (sortKey === "gpa") {
+      result = sortUtil.sortCoursesByGPA(result);
+    } else {
+      result = sortUtil.sortCoursesByCode(result);
+    }
+
+    if (!sortAsc) {
+      result = sortUtil.reverse(result);
+    }
+
+    return result;
+  }, [activeCourses, sortKey, sortAsc]);
+
 
 
   const techLangs = useMemo(() => {
@@ -145,6 +165,26 @@ function CourseList() {
               {loading ? 'Loading…' : filterUtil.getFindMessage("course", activeCourses.length)}
             </span>
           </div>
+
+          <div className="sortControls">
+    <select
+      className="sortSelect"
+      value={sortKey}
+      onChange={(e) => setSortKey(e.target.value)}
+    >
+      <option value="code">Sort by Code</option>
+      <option value="gpa">Sort by Difficulty (GPA)</option>
+    </select>
+
+    <button
+      className={`sortReverseBtn ${sortAsc ? "asc" : "desc"}`}
+      onClick={() => setSortAsc(v => !v)}>
+
+        {sortAsc ? "Ascending ↑" : "Descending ↓"}
+
+    </button>
+  </div>
+
 
           <CourseGrid courses={activeCourses}>
           </CourseGrid>

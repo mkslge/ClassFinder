@@ -1,20 +1,29 @@
 import express from "express";
+import http from "http"
 import cors from "cors";
 import "dotenv/config"; 
 import { connectToDatabase, getCollection, closeDatabaseConnection } from "./database.js";
 import Course from "../models/course.js";
 import Keyword from "../models/keyword.js";
 
+
+const hostname = '0.0.0.0';
 const portNumber = 3030;
 const app = express();
 
 
-app.listen(portNumber, () => {
-    console.log(`Server running at http://localhost:${portNumber}`);
+const server = http.createServer((req, res) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Hello World\\n')
+})
+
+app.listen(portNumber, hostname, () => {
+    console.log(`Server running at http://${hostname}:${portNumber}/`)
 });
 
 app.use(cors({
-    origin: "http://localhost:3000", // temporary frontend link
+    origin: "http://10.216.190.240:3000",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }))
 
@@ -59,9 +68,12 @@ app.get("/courses/technologies", async(req, res) => {
 
         for(let i =0; i < (await courses).length;i++) {
             let technologies = courses[i].technologies;
-            for(let j = 0; j < technologies.length;j++) {
-                set.add(courses[i].technologies[j]);
+            if(technologies !== undefined) {
+                for(let j = 0; j < technologies.length;j++) {
+                    set.add(courses[i].technologies[j]);
+                }
             }
+            
         }
 
         let result = [...set];
@@ -79,9 +91,12 @@ app.get("/courses/languages", async(req, res) => {
         for(let i =0; i < (await courses).length;i++) {
             
             let languages = courses[i].languages;
-            for(let j = 0; j < languages.length;j++) {
-                set.add(courses[i].languages[j]);
+            if(languages !== undefined) {
+                for(let j = 0; j < languages.length;j++) {
+                    set.add(courses[i].languages[j]);
+                }
             }
+            
         }
 
         let result = [...set];
