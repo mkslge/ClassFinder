@@ -1,3 +1,4 @@
+import { getSemester } from "../utility/utility";
 class Course {
     code;
     title;
@@ -7,16 +8,18 @@ class Course {
     keywords;
     languages;
     technologies;
+    categories
 
     averageGPA;
 
-    constructor(code, title, isRequired, keywords, languages, technolgies, averageGPA) {
+    constructor(code, title, isRequired, keywords, languages, technolgies, categories, averageGPA) {
         this.code = code;
         this.title = title;
         this.isRequired = isRequired;
         this.keywords = keywords ?? [];
         this.languages = languages ?? [];
         this.technologies = technolgies ?? [];
+        this.categories = categories ?? [];
         this.averageGPA = averageGPA;
     }
 
@@ -42,6 +45,10 @@ class Course {
 
     getTechnologies() {
         return this.technologies;
+    }
+
+    getCategories() {
+        return this.categories;
     }
 
     getAverageGPA() {
@@ -79,12 +86,25 @@ class Course {
                     json.keywords ?? [],
                     json.languages ?? [],
                     json.technologies ?? [],
+                    json.categories ?? [],
                     json.averageGPA
         )
     }
 
     static sortCourses(list) {
         return list.sort((c1, c2) => c1.code.localeCompare(c2.code))
+    }
+
+    
+
+    static addCurrentSemesterToKeywords(courses, set) {
+        for(let i = 0; i < courses.length;i++) {
+            
+            if(set.has(courses[i].code)) {
+                courses[i].keywords.push(getSemester());
+            }
+        }
+        return courses;
     }
     
 }

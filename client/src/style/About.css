@@ -23,7 +23,7 @@
 }
 
 .aboutContainer {
-  width: min(900px, 100%);
+  width: min(1000px, 100%);
   margin: 0 auto;
   padding: 32px clamp(16px, 5vw, 48px) 48px;
   background-color: var(--page-bg);

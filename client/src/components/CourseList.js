@@ -8,6 +8,7 @@ import Filter from '../models/filter.js'
 
 import * as filterUtil from '../utility/filters.js'
 import * as sortUtil from '../utility/sort.js'
+import * as util from '../utility/utility.js'
 
 import {api} from '../modules/api.js'
 import React, { useEffect, useMemo, useState} from 'react'
@@ -24,6 +25,7 @@ function CourseList() {
     technologies: [],
     languages: [],
     keywords: [],
+    categories: [],
   })
 
   const [sortKey, setSortKey] = useState("code"); // "code" | "gpa"
@@ -40,23 +42,28 @@ function CourseList() {
       try {
         api.addVisitor().catch( () => {});
 
-        const [courseJson, techJson, langJson, keywordJson] = await Promise.all([
+        const [courseJson, techJson, langJson, kwJson, catJson, ocJson] = await Promise.all([
             api.getCourses(),
             api.getTechnologies(),
             api.getLanguages(),
             api.getKeywords(),
+            api.getCategories(),
+            api.getOfferedCourses()
         ])
-        
+        let offeredCourses = util.listToSet(ocJson);
         
         let courseObjs = Course.mapCourseJson(courseJson)
+        courseObjs = Course.addCurrentSemesterToKeywords(courseObjs, offeredCourses);
         courseObjs = sortUtil.sortCoursesByCode(courseObjs)
+
 
         setCourses(courseObjs)
         setFilterData(
             {
                 technologies: techJson,
                 languages: langJson,
-                keywords: keywordJson
+                keywords: kwJson,
+                categories: catJson,
             });
 
       } finally {
@@ -67,17 +74,41 @@ function CourseList() {
 
   
 
-  let activeCourses = useMemo(() => {
-    return filterUtil.applyFilters(courses, activeKeys, filterMode)
-  }, [courses, activeKeys, filterMode])
+  
 
-  const keywords = useMemo(() => {
+  
+
+  
+
+  const categories = useMemo( ()=> {
+    return filterData.categories.map( cat => new Filter(`cat:${cat}`, course => course.categories.includes(cat)))
+  }, [filterData.categories])
+
+  const techLangs = useMemo(() => {
+    return [
+        ...filterData.technologies.map(
+            tech => new Filter(`tech:${tech}`, (course) => course.getTechnologies().includes(tech))
+        ),
+        ...filterData.languages.map(
+            lang => new Filter(`lang:${lang}`, (course) => course.getLanguages().includes(lang))
+        )
+    ]
+  }, [filterData.technologies, filterData.languages])
+
+  let keywords = useMemo(() => {
+    
     return filterData.keywords.map(
         kw => new Filter(`kw:${kw}`, 
             (course) => course.getKeywords().includes(kw)
         )
     );
+
   }, [filterData.keywords])
+
+
+  let activeCourses = useMemo(() => {
+    return filterUtil.applyFilters(courses, activeKeys, filterMode)
+  }, [courses, activeKeys, filterMode])
 
   activeCourses = useMemo(() => {
     let result = [...activeCourses];
@@ -94,19 +125,6 @@ function CourseList() {
 
     return result;
   }, [activeCourses, sortKey, sortAsc]);
-
-
-
-  const techLangs = useMemo(() => {
-    return [
-        ...filterData.technologies.map(
-            tech => new Filter(`tech:${tech}`, (course) => course.getTechnologies().includes(tech))
-        ),
-        ...filterData.languages.map(
-            lang => new Filter(`lang:${lang}`, (course) => course.getLanguages().includes(lang))
-        )
-    ]
-  }, [filterData.technologies, filterData.languages])
   
 
   const toggleKey = (key) => {
@@ -126,6 +144,15 @@ function CourseList() {
           <h1 className="title">Filters</h1>
           <p className="subtitle">Filter by language, technology, and keywords.</p>
         </header>
+
+        <FilterPanel title="Categories" 
+            loading={loading} 
+            count={categories.length}
+            filters={categories}
+            isActiveKey={isActive}
+            onToggleKey={toggleKey}>
+
+        </FilterPanel>
 
         <FilterPanel title="Languages & Technologies" 
             loading={loading} 
@@ -202,7 +229,7 @@ function CourseList() {
       value={sortKey}
       onChange={(e) => setSortKey(e.target.value)}
     >
-      <option value="code">Sort by Code</option>
+      <option value="code">Sort by Course Code</option>
       <option value="gpa">Sort by Difficulty (GPA)</option>
     </select>
 
