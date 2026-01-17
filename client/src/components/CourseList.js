@@ -24,6 +24,7 @@ function CourseList() {
     technologies: [],
     languages: [],
     keywords: [],
+    categories: [],
   })
 
   const [sortKey, setSortKey] = useState("code"); // "code" | "gpa"
@@ -40,11 +41,12 @@ function CourseList() {
       try {
         api.addVisitor().catch( () => {});
 
-        const [courseJson, techJson, langJson, keywordJson] = await Promise.all([
+        const [courseJson, techJson, langJson, kwJson, catJson] = await Promise.all([
             api.getCourses(),
             api.getTechnologies(),
             api.getLanguages(),
             api.getKeywords(),
+            api.getCategories()
         ])
         
         
@@ -56,7 +58,8 @@ function CourseList() {
             {
                 technologies: techJson,
                 languages: langJson,
-                keywords: keywordJson
+                keywords: kwJson,
+                categories: catJson
             });
 
       } finally {
@@ -71,13 +74,7 @@ function CourseList() {
     return filterUtil.applyFilters(courses, activeKeys, filterMode)
   }, [courses, activeKeys, filterMode])
 
-  const keywords = useMemo(() => {
-    return filterData.keywords.map(
-        kw => new Filter(`kw:${kw}`, 
-            (course) => course.getKeywords().includes(kw)
-        )
-    );
-  }, [filterData.keywords])
+  
 
   activeCourses = useMemo(() => {
     let result = [...activeCourses];
@@ -95,7 +92,9 @@ function CourseList() {
     return result;
   }, [activeCourses, sortKey, sortAsc]);
 
-
+  const categories = useMemo( ()=> {
+    return filterData.categories.map( cat => new Filter(`cat:${cat}`, course => course.categories.includes(cat)))
+  }, [filterData.categories])
 
   const techLangs = useMemo(() => {
     return [
@@ -107,6 +106,14 @@ function CourseList() {
         )
     ]
   }, [filterData.technologies, filterData.languages])
+
+  const keywords = useMemo(() => {
+    return filterData.keywords.map(
+        kw => new Filter(`kw:${kw}`, 
+            (course) => course.getKeywords().includes(kw)
+        )
+    );
+  }, [filterData.keywords])
   
 
   const toggleKey = (key) => {
@@ -126,6 +133,15 @@ function CourseList() {
           <h1 className="title">Filters</h1>
           <p className="subtitle">Filter by language, technology, and keywords.</p>
         </header>
+
+        <FilterPanel title="Categories" 
+            loading={loading} 
+            count={categories.length}
+            filters={categories}
+            isActiveKey={isActive}
+            onToggleKey={toggleKey}>
+
+        </FilterPanel>
 
         <FilterPanel title="Languages & Technologies" 
             loading={loading} 

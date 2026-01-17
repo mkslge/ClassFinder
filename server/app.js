@@ -26,6 +26,8 @@ app.use(cors({
     origin: "http://10.216.190.240:3000",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }))
+app.use(express.json());     
+
 
 
 app.get("/", async(req, res) => {
@@ -45,10 +47,6 @@ app.get("/connect", async(req, res) => {
         res.status(500).send(`Error, DB Couldn't Connect. ${error}`);
     }
 });
-
-
-
-
 
 app.get("/courses", async(req, res) => {
     try {
@@ -70,7 +68,7 @@ app.get("/courses/technologies", async(req, res) => {
             let technologies = courses[i].technologies;
             if(technologies !== undefined) {
                 for(let j = 0; j < technologies.length;j++) {
-                    set.add(courses[i].technologies[j]);
+                    set.add(technologies[j]);
                 }
             }
             
@@ -93,7 +91,7 @@ app.get("/courses/languages", async(req, res) => {
             let languages = courses[i].languages;
             if(languages !== undefined) {
                 for(let j = 0; j < languages.length;j++) {
-                    set.add(courses[i].languages[j]);
+                    set.add(languages[j]);
                 }
             }
             
@@ -103,6 +101,26 @@ app.get("/courses/languages", async(req, res) => {
         res.json(result);
     } catch(error) {
         console.log(`Error in /courses/languages, ${error}`);
+    }
+});
+
+app.get("/courses/categories", async(req, res) => {
+    try {
+        let courses = await Course.getCourseList();
+        let set = new Set();
+        for(let i = 0; i < (await courses).length;i++) {
+            let categories = courses[i].categories;
+            if(categories !== undefined) {
+                for(let j = 0; j < categories.length;j++) {
+                    set.add(categories[j]);
+                }
+            }
+        }
+
+        let result = [...set];
+        res.json(result);
+    } catch(error) {
+        console.error(`Error in courses/categories. ${error}`);
     }
 });
 
@@ -153,6 +171,45 @@ app.get("/changekey", async(req, res) => {
         res.status(500).send(`Error, DB Couldn't Connect. ${error}`);
     }
 });
+
+
+
+app.post("/categories/add", async (req, res) => {
+  try {
+    const { category, codes } = req.body;
+
+    
+    if (
+      !category ||
+      !Array.isArray(codes) ||
+      codes.length === 0
+    ) {
+      return res.status(400).json({
+        error: "category (string) and codes (non-empty array) are required"
+      });
+    }
+
+    const collection = await getCollection("courses");
+
+    const result = await collection.updateMany(
+      { code: { $in: codes } },
+      { $addToSet: { categories: category } }
+    );
+
+    res.json({
+      category,
+      matched: result.matchedCount,
+      modified: result.modifiedCount
+    });
+
+  } catch (error) {
+    console.error("Error adding category:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
 
 
 

@@ -31,12 +31,14 @@ export function applyFilters(courses, activeKeys, filterMode) {
   const tech = [];
   const lang = [];
   const kw = [];
+  const cat = [];
 
   for (const key of activeKeys) {
     const [type, value] = key.split(":");
     if (type === "tech") tech.push(value);
     else if (type === "lang") lang.push(value);
     else if (type === "kw") kw.push(value);
+    else if (type === "cat") cat.push(value);
   }
 
   return courses.filter(course => {
@@ -44,13 +46,15 @@ export function applyFilters(courses, activeKeys, filterMode) {
         const techOk = tech.length === 0 || tech.every(t => course.getTechnologies().includes(t));
         const langOk = lang.length === 0 || lang.every(l => course.getLanguages().includes(l));
         const kwOk = kw.length === 0 || kw.every(k => course.getKeywords().includes(k));
+        const catOk = cat.length === 0 || cat.every(c => course.getCategories().includes(c));
         
-        return techOk && langOk && kwOk;
+        return techOk && langOk && kwOk && catOk ;
     } else { /** OR filter mode */
-        const techOk = tech.length === 0 || tech.some(t => course.getTechnologies().includes(t));
-        const langOk = lang.length === 0 || lang.some(l => course.getLanguages().includes(l));
-        const kwOk = kw.length === 0 || kw.some(k => course.getKeywords().includes(k));
-        return techOk && langOk && kwOk;
+        const techOk = tech.some(t => course.getTechnologies().includes(t));
+        const langOk = lang.some(l => course.getLanguages().includes(l));
+        const kwOk = kw.some(k => course.getKeywords().includes(k));
+        const catOk = cat.some(c => course.getCategories().includes(c));
+        return techOk || langOk || kwOk || catOk;
     }
   });
 }

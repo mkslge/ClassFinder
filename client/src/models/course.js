@@ -7,16 +7,18 @@ class Course {
     keywords;
     languages;
     technologies;
+    categories
 
     averageGPA;
 
-    constructor(code, title, isRequired, keywords, languages, technolgies, averageGPA) {
+    constructor(code, title, isRequired, keywords, languages, technolgies, categories, averageGPA) {
         this.code = code;
         this.title = title;
         this.isRequired = isRequired;
         this.keywords = keywords ?? [];
         this.languages = languages ?? [];
         this.technologies = technolgies ?? [];
+        this.categories = categories ?? [];
         this.averageGPA = averageGPA;
     }
 
@@ -42,6 +44,10 @@ class Course {
 
     getTechnologies() {
         return this.technologies;
+    }
+
+    getCategories() {
+        return this.categories;
     }
 
     getAverageGPA() {
@@ -79,6 +85,7 @@ class Course {
                     json.keywords ?? [],
                     json.languages ?? [],
                     json.technologies ?? [],
+                    json.categories ?? [],
                     json.averageGPA
         )
     }
