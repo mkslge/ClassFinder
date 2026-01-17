@@ -50,7 +50,18 @@ app.get("/connect", async(req, res) => {
 
 app.get("/courses", async(req, res) => {
     try {
-        let courses = await Course.getCourseList();
+        let courses = await Course.getOfferedCourseList();
+
+
+        res.send(courses);
+    } catch(error) {
+        res.status(500).send("Error in courses");
+    }
+});
+
+app.get("/courses/offered", async(req, res) => {
+    try {
+        let courses = await Course.getOfferedCourseList();
 
 
         res.send(courses);
@@ -104,6 +115,8 @@ app.get("/courses/languages", async(req, res) => {
     }
 });
 
+
+
 app.get("/courses/categories", async(req, res) => {
     try {
         let courses = await Course.getCourseList();
@@ -126,11 +139,24 @@ app.get("/courses/categories", async(req, res) => {
 
 app.get("/courses/keywords", async(req, res) => {
     try {
-        let keywords = await Keyword.getKeywordList();
+        let courses = await Course.getCourseList();
+        let set = new Set();
 
-        res.send(keywords);
+        for(let i =0; i < (await courses).length;i++) {
+            
+            let keywords = courses[i].keywords;
+            if(keywords !== undefined) {
+                for(let j = 0; j < keywords.length;j++) {
+                    set.add(keywords[j]);
+                }
+            }
+            
+        }
+
+        let result = [...set];
+        res.json(result);
     } catch(error) {
-        console.log(`Error in /courses/areas, ${error}`);
+        console.log(`Error in /courses/keywords, ${error}`);
     }
 });
 

@@ -8,6 +8,7 @@ import Filter from '../models/filter.js'
 
 import * as filterUtil from '../utility/filters.js'
 import * as sortUtil from '../utility/sort.js'
+import * as util from '../utility/utility.js'
 
 import {api} from '../modules/api.js'
 import React, { useEffect, useMemo, useState} from 'react'
@@ -41,17 +42,20 @@ function CourseList() {
       try {
         api.addVisitor().catch( () => {});
 
-        const [courseJson, techJson, langJson, kwJson, catJson] = await Promise.all([
+        const [courseJson, techJson, langJson, kwJson, catJson, ocJson] = await Promise.all([
             api.getCourses(),
             api.getTechnologies(),
             api.getLanguages(),
             api.getKeywords(),
-            api.getCategories()
+            api.getCategories(),
+            api.getOfferedCourses()
         ])
-        
+        let offeredCourses = util.listToSet(ocJson);
         
         let courseObjs = Course.mapCourseJson(courseJson)
+        courseObjs = Course.addCurrentSemesterToKeywords(courseObjs, offeredCourses);
         courseObjs = sortUtil.sortCoursesByCode(courseObjs)
+
 
         setCourses(courseObjs)
         setFilterData(
@@ -59,7 +63,7 @@ function CourseList() {
                 technologies: techJson,
                 languages: langJson,
                 keywords: kwJson,
-                categories: catJson
+                categories: catJson,
             });
 
       } finally {
@@ -70,27 +74,11 @@ function CourseList() {
 
   
 
-  let activeCourses = useMemo(() => {
-    return filterUtil.applyFilters(courses, activeKeys, filterMode)
-  }, [courses, activeKeys, filterMode])
+  
 
   
 
-  activeCourses = useMemo(() => {
-    let result = [...activeCourses];
-
-    if (sortKey === "gpa") {
-      result = sortUtil.sortCoursesByGPA(result);
-    } else {
-      result = sortUtil.sortCoursesByCode(result);
-    }
-
-    if (!sortAsc) {
-      result = sortUtil.reverse(result);
-    }
-
-    return result;
-  }, [activeCourses, sortKey, sortAsc]);
+  
 
   const categories = useMemo( ()=> {
     return filterData.categories.map( cat => new Filter(`cat:${cat}`, course => course.categories.includes(cat)))
@@ -107,13 +95,36 @@ function CourseList() {
     ]
   }, [filterData.technologies, filterData.languages])
 
-  const keywords = useMemo(() => {
+  let keywords = useMemo(() => {
+    
     return filterData.keywords.map(
         kw => new Filter(`kw:${kw}`, 
             (course) => course.getKeywords().includes(kw)
         )
     );
+
   }, [filterData.keywords])
+
+
+  let activeCourses = useMemo(() => {
+    return filterUtil.applyFilters(courses, activeKeys, filterMode)
+  }, [courses, activeKeys, filterMode])
+
+  activeCourses = useMemo(() => {
+    let result = [...activeCourses];
+
+    if (sortKey === "gpa") {
+      result = sortUtil.sortCoursesByGPA(result);
+    } else {
+      result = sortUtil.sortCoursesByCode(result);
+    }
+
+    if (!sortAsc) {
+      result = sortUtil.reverse(result);
+    }
+
+    return result;
+  }, [activeCourses, sortKey, sortAsc]);
   
 
   const toggleKey = (key) => {
@@ -218,7 +229,7 @@ function CourseList() {
       value={sortKey}
       onChange={(e) => setSortKey(e.target.value)}
     >
-      <option value="code">Sort by Code</option>
+      <option value="code">Sort by Course Code</option>
       <option value="gpa">Sort by Difficulty (GPA)</option>
     </select>
 

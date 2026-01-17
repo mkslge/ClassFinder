@@ -1,3 +1,4 @@
+import { getSemester } from "../utility/utility";
 class Course {
     code;
     title;
@@ -92,6 +93,18 @@ class Course {
 
     static sortCourses(list) {
         return list.sort((c1, c2) => c1.code.localeCompare(c2.code))
+    }
+
+    
+
+    static addCurrentSemesterToKeywords(courses, set) {
+        for(let i = 0; i < courses.length;i++) {
+            
+            if(set.has(courses[i].code)) {
+                courses[i].keywords.push(getSemester());
+            }
+        }
+        return courses;
     }
     
 }

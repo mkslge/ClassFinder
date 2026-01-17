@@ -1,6 +1,9 @@
 
 import { connectToDatabase, getCollection, closeDatabaseConnection } from "../server/database.js";
 import fs from "fs/promises";
+
+import * as Cons from "../utility/constants.js"
+import { getTestudoLink, getSemester } from "../utility/term.js";
 class Course {
     code;
     title;
@@ -40,36 +43,60 @@ class Course {
         return this.categories;
     }
 
-
-
+    
+    /* STATIC FUNCTIONS */
 
     static async getCourseList() {
         
         try {
             const db = await connectToDatabase();
-            const courseCollection = db.collection("courses");
+                const courseCollection = db.collection("courses");
 
             const courses = await courseCollection.find({}).toArray();
-            
+
             return courses;
         } catch(error) {
-            console.error("Failed to fetch course index.");
+            console.error(`Error in get Course List, ${error}`);
             return "Error";
         }
     }
 
-    static formatJsonCourses(courses) {
-        let lst = [];
-        for(let i = 0; i < courses.length;i++) {
-            lst.push(this.jsonToCourse(courses[i]));
+    static async getOfferedCourseList() {
+        try {
+            const db = await connectToDatabase();
+            const courseCollection = db.collection("courses");
+
+            let courses = await courseCollection.find({}).toArray();
+
+            const currSemester = getSemester();
+
+            for(let i= 0; i < courses.length;i++) {
+                const offered = await this.isOfferedCourse(courses[i]);
+                if(offered) {
+                    courses[i].keywords ??= [];
+                    courses[i].keywords.push(currSemester)
+                }
+            }
+
+            return courses
+        } catch(error) {
+            console.error(`Error in get Course List, ${error}`);
+            return "Error";
         }
-        return lst;
+    }
+
+    static async isOfferedCourse(course) {
+    let courseLink = getTestudoLink(course.code);
+
+        const res = await fetch(courseLink);
+        const html = await res.text();
+        return !html.includes("No courses matched your search filters above.")
     }
 
 
     static jsonToCourse(json) {
         try {
-            return new Course(json.code, json.title, json.isRequired, json.keywords, json.languages, json.technologies, json.averageGPA);
+            return new Course(json.code, json.title, json.isRequired, json.keywords, json.languages, json.technologies,json.categories,json.averageGPA);
         } catch(error ) {
             console.error(`Json of Course Object ${json.code} does not have needed fields... ${error}`);
             return "Error in jsonToCourse"

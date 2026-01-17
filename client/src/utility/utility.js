@@ -36,3 +36,29 @@ function calcYearID() {
      return today.getFullYear() + 1;
    }
 }
+
+export function listToSet(list) {
+    let set = new Set();
+    for(let i = 0; i < list.length;i++) {
+        set.add(list[i]);
+    }
+    return set;
+}
+
+
+export function getSemester() {
+    return termIDToString(getTermID());
+}
+
+function termIDToString(termID) {
+    let yearID = termID.substring(0,4); //first four characters
+    let monthID = termID.substring(4);; //last two characters (either 01 or 08)
+
+    let semester = "Spring"
+
+    if(monthID === "08") {
+        semester = "Fall"
+    }
+
+    return `${semester} ${yearID}`;
+}
