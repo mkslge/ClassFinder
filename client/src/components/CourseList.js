@@ -57,8 +57,7 @@ function CourseList() {
             {
                 technologies: techJson,
                 languages: langJson,
-                keywords: /*kwJson,*/
-                sortUtil.sortKeywords(kwJson),
+                keywords: sortUtil.sortKeywords(kwJson),
                 categories: catJson,
             });
 

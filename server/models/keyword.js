@@ -1,4 +1,4 @@
-import { connectToDatabase, getCollection, closeDatabaseConnection } from "../server/database.js";
+import { connectToDatabase, getCollection, closeDatabaseConnection } from "../database.js";
 
 
 class Keyword {

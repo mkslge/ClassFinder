@@ -1,5 +1,5 @@
 
-import { connectToDatabase, getCollection, closeDatabaseConnection } from "../server/database.js";
+import { connectToDatabase, getCollection, closeDatabaseConnection } from "../database.js";
 import fs from "fs/promises";
 
 import * as Cons from "../utility/constants.js"

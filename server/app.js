@@ -3,9 +3,9 @@ import http from "http"
 import cors from "cors";
 import "dotenv/config"; 
 import { connectToDatabase, getCollection, closeDatabaseConnection } from "./database.js";
-import Course from "../models/course.js";
-import Keyword from "../models/keyword.js";
-import { getSemester } from "../utility/term.js";
+import Course from "./models/course.js";
+import Keyword from "./models/keyword.js";
+import { getSemester } from "./utility/term.js";
 
 
 const hostname = '0.0.0.0';
