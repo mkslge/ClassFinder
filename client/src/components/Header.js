@@ -5,7 +5,7 @@ function Header(activePage) {
     <header className="Header">
       <nav className="menu" aria-label="Primary navigation">
         <a className="brand" href="/" aria-label="Go to homepage">
-          TerpCS Hub
+          TerpCS Atlas
         </a>
 
         <ul className="menuList">

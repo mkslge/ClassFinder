@@ -6,8 +6,8 @@ import CourseGrid from './CourseGrid.js'
 import Course from '../models/course.js'
 import Filter from '../models/filter.js'
 
-import * as filterUtil from '../utility/filters.js'
-import * as sortUtil from '../utility/sort.js'
+import * as filterUtil from '../utility/filterUtil.js'
+import * as sortUtil from '../utility/sortUtil.js'
 
 import {api} from '../modules/api.js'
 import React, { useEffect, useMemo, useState} from 'react'
