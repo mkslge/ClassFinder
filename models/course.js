@@ -50,10 +50,8 @@ class Course {
         
         try {
             const db = await connectToDatabase();
-                const courseCollection = db.collection("courses");
-
+            const courseCollection = db.collection("courses");
             const courses = await courseCollection.find({}).toArray();
-
             return courses;
         } catch(error) {
             console.error(`Error in get Course List, ${error}`);
@@ -86,10 +84,16 @@ class Course {
     }
 
     static async isOfferedCourse(course) {
-    let courseLink = getTestudoLink(course.code);
+        let courseLink = getTestudoLink(course.code);
+        
 
         const res = await fetch(courseLink);
         const html = await res.text();
+        if(html.includes("No courses matched your search filters above.")) {
+            return false;
+        } else {
+            return true;
+        }
         return !html.includes("No courses matched your search filters above.")
     }
 

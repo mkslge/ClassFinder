@@ -5,6 +5,7 @@ import "dotenv/config";
 import { connectToDatabase, getCollection, closeDatabaseConnection } from "./database.js";
 import Course from "../models/course.js";
 import Keyword from "../models/keyword.js";
+import { getSemester } from "../utility/term.js";
 
 
 const hostname = '0.0.0.0';
@@ -50,7 +51,7 @@ app.get("/connect", async(req, res) => {
 
 app.get("/courses", async(req, res) => {
     try {
-        let courses = await Course.getOfferedCourseList();
+        let courses = await Course.getCourseList();
 
 
         res.send(courses);
@@ -161,13 +162,41 @@ app.get("/courses/keywords", async(req, res) => {
 });
 
 
+app.get("/courses/update/semester", async(req, res) => {
+    try {
+        let currSem = getSemester();
+
+        const db = await connectToDatabase();
+        const courseCollection = db.collection("courses");
+        const courses = await courseCollection.find({}).toArray();
+
+        let coursesToUpdate = []
+
+        for(let i = 0; i < courses.length;i++) {
+            if(await Course.isOfferedCourse(courses[i])) {
+                coursesToUpdate.push(courses[i].code);
+            }
+        }
+
+        const result = await courseCollection.updateMany(
+        { code: { $in: coursesToUpdate } },
+        { $addToSet: { keywords: currSem } }
+        );
+        res.send(`${result.modifiedCount} courses changed`)
+    } catch(error) {
+        console.log(`error in /courses/update/semester, ${error}`);
+    }
+});
+
+
+
+
 app.post("/addvisitor", async(req, res) => {
     try {
         const visitorColl = await getCollection("visitors");
         const result = await visitorColl.findOneAndUpdate(
             {},
-            {$inc: {
-visitorCount: 1}},
+            {$inc: {visitorCount: 1}},
             {returnDocument: "after"}
         )
         res.json(
@@ -197,8 +226,6 @@ app.get("/changekey", async(req, res) => {
         res.status(500).send(`Error, DB Couldn't Connect. ${error}`);
     }
 });
-
-
 
 app.post("/categories/add", async (req, res) => {
   try {

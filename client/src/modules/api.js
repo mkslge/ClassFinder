@@ -9,6 +9,5 @@ export const api = {
   getLanguages: () => requestUtil.getRequest(`${API_BASE}/courses/languages`),
   getKeywords: () => requestUtil.getRequest(`${API_BASE}/courses/keywords`),
   getCategories: () => requestUtil.getRequest(`${API_BASE}/courses/categories`),
-  addVisitor: () => requestUtil.postRequest(`${API_BASE}/addvisitor`),
-  getOfferedCourses: () => requestUtil.getRequest(`${API_BASE}/courses/offered`)
+  addVisitor: () => requestUtil.postRequest(`${API_BASE}/addvisitor`)
 };
