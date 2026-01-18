@@ -1,6 +1,6 @@
 import * as requestUtil from '../utility/requestUtil.js'
 const API_BASE =
-  import.meta.env.VITE_API_BASE || "http://10.216.190.240:3030";
+  import.meta.env.VITE_API_BASE || "https://classfinder-production.up.railway.app/";
 
 
 export const api = {
