@@ -9,7 +9,7 @@ import { getSemester } from "./utility/term.js";
 
 
 const hostname = '0.0.0.0';
-const portNumber = 3030;
+const portNumber = process.env.PORT || 3030;
 const app = express();
 
 
