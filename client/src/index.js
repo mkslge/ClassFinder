@@ -6,8 +6,8 @@ import './index.css';
 
 import Header from './components/Header'
 
-import About from './pages/About'
-import Home from './pages/Home'
+import About from './pages/About.js'
+import Home from './pages/Home.js'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
