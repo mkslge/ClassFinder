@@ -25,8 +25,12 @@ export async function connectToDatabase() {
 
 export async function getCollection(name) {
   const db = await connectToDatabase();
+
+
   return db.collection(name);
 }
+
+
 
 export async function closeDatabaseConnection() {
   if (client) {

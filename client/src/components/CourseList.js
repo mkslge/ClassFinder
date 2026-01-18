@@ -8,7 +8,6 @@ import Filter from '../models/filter.js'
 
 import * as filterUtil from '../utility/filters.js'
 import * as sortUtil from '../utility/sort.js'
-import * as util from '../utility/utility.js'
 
 import {api} from '../modules/api.js'
 import React, { useEffect, useMemo, useState} from 'react'
@@ -42,27 +41,24 @@ function CourseList() {
       try {
         api.addVisitor().catch( () => {});
 
-        const [courseJson, techJson, langJson, kwJson, catJson, ocJson] = await Promise.all([
+        const [courseJson, techJson, langJson, kwJson, catJson] = await Promise.all([
             api.getCourses(),
             api.getTechnologies(),
             api.getLanguages(),
             api.getKeywords(),
-            api.getCategories(),
-            api.getOfferedCourses()
+            api.getCategories()
         ])
-        let offeredCourses = util.listToSet(ocJson);
         
         let courseObjs = Course.mapCourseJson(courseJson)
-        courseObjs = Course.addCurrentSemesterToKeywords(courseObjs, offeredCourses);
         courseObjs = sortUtil.sortCoursesByCode(courseObjs)
-
 
         setCourses(courseObjs)
         setFilterData(
             {
                 technologies: techJson,
                 languages: langJson,
-                keywords: kwJson,
+                keywords: /*kwJson,*/
+                sortUtil.sortKeywords(kwJson),
                 categories: catJson,
             });
 
@@ -71,11 +67,6 @@ function CourseList() {
       }
     })()
   }, [])
-
-  
-
-  
-
   
 
   
