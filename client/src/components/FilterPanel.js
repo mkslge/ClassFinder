@@ -1,7 +1,7 @@
 import React from "react";
 import ChipGrid from "./ChipGrid.js";
 
-import * as filterUtil from '../utility/filters.js'
+import * as filterUtil from '../utility/filterUtil.js'
 
 function FilterPanel({ title, loading, count, filters, isActiveKey, onToggleKey, footer }) {
   return (
