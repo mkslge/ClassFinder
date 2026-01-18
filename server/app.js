@@ -23,10 +23,11 @@ app.listen(portNumber, hostname, () => {
     console.log(`Server running at http://${hostname}:${portNumber}/`)
 });
 
-app.use(cors({
+/*app.use(cors({
     origin: "http://10.216.190.240:3000",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-}))
+}))*/
+app.use(cors());
 app.use(express.json());     
 
 
